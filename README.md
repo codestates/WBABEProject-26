@@ -1,3 +1,0 @@
-# Online ordering System
-
-Something
