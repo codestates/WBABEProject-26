@@ -1,9 +1,11 @@
-#Project 관련
-
 ## 원래 설정파일은 gitignore에 추가되어야 하나 학습 샘플 예제이므로 해당 파일은 오픈됩니다.
-#/config/config.toml
 
-# go default
-/go.mod
-/go.sum
+[server]
+mdoe = "dev"
+port = 8090
 
+[db]
+host = "mongodb://localhost:27017"
+user = "oos"
+pw = "oos1234"
+name = "oos"
