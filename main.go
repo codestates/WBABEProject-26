@@ -1,26 +1,115 @@
 package main
 
 import (
-	"fmt"
+	"context"
+	"log"
+	"net/http"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 
 	oosConfig "wemade_project/config"
+	receipt_controller "wemade_project/controller/receipt"
+	oos_valid "wemade_project/controller/validators"
+	receipt_model "wemade_project/model/receipt"
+	receipt_router "wemade_project/router/receipt"
+	receipt_service "wemade_project/service/receipt"
 )
+
+var (
+	server *gin.Engine
+	ctx context.Context
+	mongoClient *mongo.Client
+
+	config *oosConfig.Config
+
+	menuCollection *mongo.Collection	
+	menuModel receipt_model.MenuCollection
+	menuService receipt_service.MenuService
+	menuController receipt_controller.MenuController
+	menuRouter receipt_router.MenuRoute
+)
+
+//init 함수
+func init() {
+	//Timeline 
+	
+
+	var configErr error //컨피그 처리용 로컬 변수
+	config, configErr = oosConfig.GetConfig()
+	if (configErr != nil) {
+		panic(configErr)
+	}
+	
+	ctx = context.TODO()
+	
+	//Connect MongoDB
+	var mongoErr error //몽고 처리용 로컬 변수
+	mongoConnect := options.Client().ApplyURI(config.DB.Host).SetAuth(options.Credential{AuthSource : config.DB.Name, Username: config.DB.User, Password: config.DB.Pw})
+	mongoClient, mongoErr = mongo.Connect(ctx, mongoConnect)
+
+	if mongoErr != nil {
+		panic(mongoErr)
+	}
+
+	if err := mongoClient.Ping(ctx, readpref.Primary()); err != nil {
+		panic(err)
+	}
+	//Mongo DB connect
+	// fmt.Println("MongoDB successfully connected...")
+
+	// Collections
+	mongoDB := mongoClient.Database("sso")
+	menuCollection = mongoDB.Collection("menu")
+
+	menuModel = receipt_model.InitWithSelf(menuCollection, ctx);
+	menuService = receipt_service.InitWithSelf(menuModel);
+	menuController = receipt_controller.InitWithSelf(menuService)
+	menuRouter = receipt_router.InitWithSelf(menuController)
+
+	//Add Validator
+	oos_valid.RegValidator4MenuEvent()
+
+	//Gin Server
+	server = gin.Default()
+	server.Use(gin.Logger())
+
+	/*
+		ginEngin := gin.Default()
+	ginEngin.Use(gin.Logger())
+	ginEngin.Use(gin.Recovery())
+	ginEngin.Use(router.CORS())
+	*/
+}
 
 //main
 func main() {
-	config := oosConfig.GetConfig()
+	startGinServer();
+}
 
-	// var port int
-	// var configPath string
-	// flag.IntVar(&port, "port", 7080, "port to listen on")
+//func startGinServer(config *oosConfig.Config ) {
+func startGinServer( ) {
+	// corsConfig := cors.DefaultConfig()
+	// corsConfig.AllowOrigins = []string{config.Origin}
+	// corsConfig.AllowCredentials = true
+	
+	//라우터 등록 부분
 
-	// flag.StringVar(&configPath, "config", "./config/config1.toml", "Use config file")
+	router := server.Group("/api")
+	{
+		router.GET("/healthchecker", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": "Success"})
+	})
+	}
+	
 
-	// flag.Parse()
+	//Menu Route Setup
+	menuRouter.InitWithRoute(server)
+	
 
-	// fmt.Print("Hello World Go Go = ", port )
-	fmt.Print("Hello World Go Go = ", config.DB.Host )
-	// fmt.Println("configPath = ", configPath)
-	// flag.Parse()
-	// fmt.Println(flag.Args())
+	
+	log.Fatal(server.Run(":" + strconv.Itoa(config.Server.Port)))
 }

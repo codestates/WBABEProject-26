@@ -18,12 +18,12 @@ type Config struct {
 		Host string
 		User string
 		Pw string
-		DBName string
+		Name string
 	}
 }
 
 //Config Load
-func GetConfig() *Config {
+func GetConfig() (*Config, error) {
 	//커맨드에 들어온 값에 따라 처리
 	var configPath string
 	flag.StringVar(&configPath, "config", "./config/config.toml", "Use config file")
@@ -32,13 +32,13 @@ func GetConfig() *Config {
 	c := new (Config)
 
 	if file, err := os.Open(configPath); err != nil {
-		panic(err)
+		return nil, err
 	} else {
 		defer file.Close()
 		if err := toml.NewDecoder(file).Decode(c); err != nil {
-			panic(err)
+			return nil, err
 		} else {
-			return c
+			return c, nil
 		}
 	}
 }
