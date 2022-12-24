@@ -46,8 +46,10 @@ type MenuSellStatusType int
 const (
 	MSS_OnSeal MenuSellStatusType = iota + 1 //판매중
 	MSS_SoldOut //매진
-	MSS_SeasonEnd //시즌 상품
+	MSS_Season //시즌 상품
+	MSS_SeasonEnd //시즌 상품 종료
 	MSS_EventEnd //한시적 이벤트
+	MSS_Delete //삭제된 메뉴
 )
 
 

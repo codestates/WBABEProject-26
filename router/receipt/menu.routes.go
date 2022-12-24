@@ -16,11 +16,12 @@ func InitWithSelf(menuController receipt_controller.MenuController ) MenuRoute {
 
 
 func (r *MenuRoute) InitWithRoute(server *gin.Engine) {
-	storeRouterV1 := server.Group("/api/v1/store")
+	storeMenuRouterV1 := server.Group("/api/v1/store")
 	{
-		storeRouterV1.GET("menu/get", r.menuController.GetMenu())
-		storeRouterV1.POST("/menu/add",r.menuController.AddMenu())
-		storeRouterV1.PUT("/menu/update", r.menuController.UpdateMenu())
+		storeMenuRouterV1.GET("menu/get", r.menuController.GetMenu())
+		storeMenuRouterV1.POST("/menu/add",r.menuController.AddMenu())
+		storeMenuRouterV1.PUT("/menu/update", r.menuController.UpdateMenu())
+		storeMenuRouterV1.DELETE("/menu/delete/:menu_id", r.menuController.DeleteMenu4Logical())
 	}
 }
 
