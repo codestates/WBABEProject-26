@@ -20,12 +20,9 @@ func (r *MenuRoute) InitWithRoute(server *gin.Engine) {
 	{
 		storeRouterV1.GET("menu/get", r.menuController.GetMenu())
 		storeRouterV1.POST("/menu/add",r.menuController.AddMenu())
+		storeRouterV1.PUT("/menu/update", r.menuController.UpdateMenu())
 	}
 }
 
 
 
-/*
-// storeRouterV1.GET("menu/get", receipt_controller.GetMenu())
-		// storeRouterV1.POST("/menu/add",receipt_controller.AddMenu())
-*/

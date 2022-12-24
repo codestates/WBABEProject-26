@@ -1,5 +1,8 @@
 package dto
 
+/////////////////////////
+//		Common
+/////////////////////////
 
 type ResponseBody struct {
 	Result bool `json:"result" binding:"required"`
