@@ -6,6 +6,7 @@ import (
 
 	"wemade_project/dto"
 	receipt_dto "wemade_project/dto"
+	receipt_enums "wemade_project/enums/receipt"
 	receipt_service "wemade_project/service/receipt"
 
 	"github.com/gin-gonic/gin"
@@ -85,9 +86,9 @@ func (mc *MenuController) UpdateMenu() gin.HandlerFunc {
 		var updateMenuReq receipt_dto.UpdateMenuRequest
 
 		if err := ginCtx.BindJSON(&updateMenuReq); err != nil {
-			fmt.Println("err = ", err )
-			
-			return 
+			errorBody := dto.ResponseBody{Result: false, Msg: err}
+			ginCtx.JSON(http.StatusBadGateway, errorBody )
+			return
 		}
 
 		result, mongoErr := mc.menuService.UpdateMenuItem(updateMenuReq);
@@ -101,6 +102,26 @@ func (mc *MenuController) UpdateMenu() gin.HandlerFunc {
 	}
 }
 
+
+/////////////////////////
+//	  Delete (Delete)
+/////////////////////////
+
+//Menu 아이템을 논리적으로 삭제하는 함수
+func (mc *MenuController) DeleteMenu4Logical() gin.HandlerFunc {
+	return func(ginCtx *gin.Context) {
+		updateDto := dto.UpdateMenuRequest{Id: ginCtx.Param("menu_id"), MenuStatus: receipt_enums.MSS_Delete }
+
+		_, mongoErr := mc.menuService.UpdateMenuItem(updateDto);
+		if mongoErr != nil {
+			errorBody := dto.ResponseBody{Result: false, Msg: mongoErr.Error()}
+			ginCtx.JSON(http.StatusBadGateway, errorBody )	
+			return
+		}
+
+		ginCtx.JSON(http.StatusOK, dto.ResponseBody{Result: true, Data: "Menu delete success."})
+	}
+}
 
 
 /////////////////////////

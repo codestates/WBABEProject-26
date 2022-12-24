@@ -32,7 +32,7 @@ type MenuEntity struct {
 	ID primitive.ObjectID `bson:"_id,omitempty"`
 	Id string `bson:"id"` //고유 id
 	Name string `bson:"name"` //메뉴 이름
-	IsCanOrder receipt_enums.MenuSellStatusType `bson:"isCanOrder"`	//주문 가능 여부	
+	MenuStatus receipt_enums.MenuSellStatusType `bson:"menuStatus"`	//주문 가능 여부	
 	Price int `bson:"price"` //가격
 	Event []receipt_enums.MenuEventType `bson:"event"` //이벤트
 	MenuCategory []receipt_enums.MenuCategoryType `bson:"menuCategory"` //매뉴 카테고리
@@ -82,9 +82,9 @@ func (m *MenuCollection) AddEntity(entity MenuEntity) (*mongo.InsertOneResult, e
 /////////////////////////
 
 //Id 값으로 조회
-func (m *MenuCollection) FindByInnerId(innerId interface{}) (*MenuEntity, error) {
+func (m *MenuCollection) FindByObjectId(objectId interface{}) (*MenuEntity, error) {
 	var menuItem *MenuEntity
-	query := bson.M{"_id": innerId}
+	query := bson.M{"_id": objectId}
 	if err := m.MenuCollection.FindOne(m.Ctx, query).Decode(&menuItem); err != nil {
 		return nil, err
 	}
@@ -120,4 +120,25 @@ func (m *MenuCollection) UpdateEntity(_id primitive.ObjectID, updateSet bson.D) 
 	}
 
 	return updateMenu, nil;
+}
+
+
+/////////////////////////
+//		Delete
+/////////////////////////
+
+//엔티티를 물리적으로 삭제하는 함수
+//가급적 미사용 처리 (메서드 및 외부 호출 불가 상태)
+func (m *MenuCollection) deleteEntity(_id primitive.ObjectID) error {
+	query := bson.D{{Key: "_id", Value: _id}}
+
+	res, err := m.MenuCollection.DeleteOne(m.Ctx, query)
+	if err != nil {
+		return err
+	}
+
+	if res.DeletedCount == 0 {
+		return errors.New("There is not exist menu _id... Send _id = "+ _id.String())
+	}
+	return nil
 }
