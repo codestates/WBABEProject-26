@@ -17,6 +17,8 @@ import (
 	receipt_model "wemade_project/model/receipt"
 	receipt_router "wemade_project/router/receipt"
 	receipt_service "wemade_project/service/receipt"
+
+	user_model "wemade_project/model/user"
 )
 
 var (
@@ -26,11 +28,16 @@ var (
 
 	config *oosConfig.Config
 
+	//Menu
 	menuCollection *mongo.Collection	
 	menuModel receipt_model.MenuCollection
 	menuService receipt_service.MenuService
 	menuController receipt_controller.MenuController
 	menuRouter receipt_router.MenuRoute
+
+	//User
+	userCollection *mongo.Collection	
+	userModel user_model.UserCollection
 )
 
 //init 함수
@@ -64,11 +71,16 @@ func init() {
 	// Collections
 	mongoDB := mongoClient.Database("sso")
 	menuCollection = mongoDB.Collection("menu")
+	userCollection = mongoDB.Collection("users")
 
+	//Menu
 	menuModel = receipt_model.InitWithSelf(menuCollection, ctx);
 	menuService = receipt_service.InitWithSelf(menuModel);
 	menuController = receipt_controller.InitWithSelf(menuService)
 	menuRouter = receipt_router.InitWithSelf(menuController)
+
+	//User
+	userModel = user_model.InitWithSelf(userCollection, ctx)
 
 	//Add Validator
 	oos_valid.RegValidator4MenuEvent()

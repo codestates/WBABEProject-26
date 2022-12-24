@@ -42,6 +42,7 @@ type MenuEntity struct {
 	UpdateDate time.Time `bson:"updateDate"` //데이터 수정 시각
 }
 
+//recommendation_count [] user_id
 
 type MenuCollection struct {
 	MenuCollection *mongo.Collection
@@ -53,7 +54,6 @@ type MenuCollection struct {
 /////////////////////////
 
 func InitWithSelf(menuCol *mongo.Collection, ctx context.Context) MenuCollection {
-	
 	return MenuCollection{menuCol, ctx}
 }
 
