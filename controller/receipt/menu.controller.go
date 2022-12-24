@@ -54,6 +54,7 @@ func (mc *MenuController) AddMenu() gin.HandlerFunc {
 
 		if err := ginCtx.ShouldBindJSON(&addMenuReq); err != nil {
 			fmt.Println("err = ", err )
+			//예외 바인딩
 			handleBindError(ginCtx, addMenuReq, "checkerMenuEvent", err)
 			return 
 		}
@@ -65,21 +66,50 @@ func (mc *MenuController) AddMenu() gin.HandlerFunc {
 		if mongoErr != nil {
 			errorBody := dto.ResponseBody{Result: false, Msg: mongoErr.Error()}
 			ginCtx.JSON(http.StatusBadGateway, errorBody )	
+			return
 		}
-		
-		// res := dto.ResponseBody{Result: true, Data: result}
-		// fmt.Println("res = ", res)
-		//fmt.Println("re = ", utils.ChangeStruct2JsonStr(addMenuReq))
 	
 		ginCtx.JSON(http.StatusOK, dto.ResponseBody{Result: true, Data: result})
 	}
 }
 
 
+/////////////////////////
+//	  Update (Update)
+/////////////////////////
+
+//메뉴 수정
+func (mc *MenuController) UpdateMenu() gin.HandlerFunc {
+	return func(ginCtx *gin.Context) {
+		//UpdateMenuRequest
+		var updateMenuReq receipt_dto.UpdateMenuRequest
+
+		if err := ginCtx.BindJSON(&updateMenuReq); err != nil {
+			fmt.Println("err = ", err )
+			
+			return 
+		}
+
+		result, mongoErr := mc.menuService.UpdateMenuItem(updateMenuReq);
+		if mongoErr != nil {
+			errorBody := dto.ResponseBody{Result: false, Msg: mongoErr.Error()}
+			ginCtx.JSON(http.StatusBadGateway, errorBody )	
+			return
+		}
+
+		ginCtx.JSON(http.StatusOK, dto.ResponseBody{Result: true, Data: result})
+	}
+}
+
+
+
+/////////////////////////
+//	  Error Handler
+/////////////////////////
+
 /////Error bind
 func handleBindError(c *gin.Context, obj interface{}, tag string, err error) {
 	var errs []gin.H
-	// /switch err.(type) {
 	switch err.(type) {
 		case validator.ValidationErrors:	
 			vErrs := err.(validator.ValidationErrors)
@@ -104,79 +134,8 @@ func handleBindError(c *gin.Context, obj interface{}, tag string, err error) {
             })
 	}
 
-	
-	// fmt.Println("tag = ",vErr.ActualTag(), " value = ", vErr.Value(), " fil = ", vErr.Field())	
 	c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 		"errors": errs,
 	})	 
 }
-
-/*
-switch err.(type) {
-    case validator.ValidationErrors:
-        var errs []gin.H
-        vErrs := err.(validator.ValidationErrors)
-        e := reflect.TypeOf(obj).Elem()
-        for _, vErr := range vErrs {
-            field, _ := e.FieldByName(vErr.Field())
-            tagName, _ := field.Tag.Lookup(tag)
-            value := vErr.Value()
-            var message string
-            switch vErr.ActualTag() {
-            case "required":
-                message = fmt.Sprintf("required %s", tagName)
-            case "hexadecimal":
-                message = fmt.Sprintf("required hexadecimal format")
-            case "gte":
-                message = fmt.Sprintf("greater than or quauls to %s", vErr.Param())
-            case "cgte":
-                message = fmt.Sprintf("greater than or quauls to %s", vErr.Param())
-            case "numeric":
-                message = fmt.Sprintf("%s must be numeric", tagName)
-			case "checkerMenuEvent":
-				message = fmt.Sprintln("Menu Event Code is wrong. Check Value. ", value)
-            default:
-                message = err.Error()
-            }
-            errs = append(errs, gin.H{
-                "field":   tagName,
-                "value":   value,
-                "message": message,
-            })
-        }
-        c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-            "errors": errs,
-        })
-        return
-    }
-    c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
-
-*/
-
-
-
-
-
-/*
-
-   "age": 23,
-    "pnum": "01012352"
-var newPerson *CreatePerson2Request
-
-		if err := ctx.ShouldBindJSON(&newPerson); err != nil {
-			ctx.JSON(http.StatusBadRequest, err.Error())
-		}
-
-func (p *Controller) NewPersonInsert(c *gin.Context) {
-	name := c.PostForm("name")
-	sAge := c.PostForm("age")
-	spnum := c.PostForm("pnum")
-
-	if len(name) <= 0 || len(spnum) <= 0 {
-		p.RespError(c, nil, http.StatusUnprocessableEntity, "parameter not found", nil)
-		return
-	}
-*/
-
-
 

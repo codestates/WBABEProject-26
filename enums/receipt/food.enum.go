@@ -1,5 +1,9 @@
 package receipt_enums
 
+/////////////////////////
+//	Menu Category
+/////////////////////////
+
 type MenuCategoryType int
 
 const(
@@ -10,6 +14,11 @@ const(
 	MC_Pasta //파스타
 	MC_Bread //빵
 )
+
+
+/////////////////////////
+//	   메뉴 이벤트
+/////////////////////////
 
 type MenuEventType int
 
@@ -28,7 +37,23 @@ func (m MenuEventType) MenuEventStr() string {
 	return ""
 }
 
+/////////////////////////
+//   메뉴 판매 상태
+/////////////////////////
 
+type MenuSellStatusType int
+
+const (
+	MSS_OnSeal MenuSellStatusType = iota + 1 //판매중
+	MSS_SoldOut //매진
+	MSS_SeasonEnd //시즌 상품
+	MSS_EventEnd //한시적 이벤트
+)
+
+
+/////////////////////////
+//	음식 메뉴 중 매운 강도
+/////////////////////////
 
 type FoodSpicyType int
 
