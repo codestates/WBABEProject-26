@@ -98,7 +98,9 @@ type ReceiptReadMenuResponse struct {
 	UpdateDate time.Time `json:"updateDate"` //데이터 수정 시각
 }
 
-type UserReadMenuResponse struct {
+//RecommendationCount []string `bson:"recommendation_count"` //메뉴 추천수
+
+type NormalReadMenuResponse struct {
 	Id string `json:"id"`
 	Name string `json:"name"` //메뉴 이름
 	MenuStatus receipt_enums.MenuSellStatusType `json:"menuStaus"`	//주문 가능 여부	
