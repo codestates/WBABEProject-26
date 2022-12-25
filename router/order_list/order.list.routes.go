@@ -24,7 +24,8 @@ func (r *OrderListRoute) InitWithRoute(server *gin.Engine) {
 		
 		//주문 접수
 		orderListRouterV1.POST("/order/add", r.orderListController.AddOrderListItem())
-		orderListRouterV1.PUT("/order/update", r.orderListController.UpdateOrderList())
+		orderListRouterV1.PUT("/order/menu/update", r.orderListController.UpdateOrderList4Menu())
+		orderListRouterV1.PUT("/order/status/update", r.orderListController.UpdateOrderList4Status())
 
 		
 		// orderListRouterV1.PUT("/menu/update", r.menuController.UpdateMenu())

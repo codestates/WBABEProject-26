@@ -20,9 +20,15 @@ type CreateOrderListRequest struct {
 /**
 * 주문 요청 업데이트 리퀘스트
 */
-type UpdateOrderListRequest struct {
+type UpdateOrderList4MenuRequest struct {
 	OrderId string `json:"orderId" binding:"required"` //고유 id
 	OrderMenu []string `json:"orderMenu" binding:"required"` //주문 메뉴 리스트
+}
+
+//주문 상태 업데이트
+type UpdateOrderList4StatusRequest struct {
+	OrderId string `json:"orderId" binding:"required"` //고유 id
+	OrderStatus order_enums.OrderStatus `json:"orderStatus" binding:"required"` //주문 상태
 }
 
 
