@@ -21,8 +21,7 @@ type OrderListEntity struct {
 	OrderId string `bson:"orderId"` //고유 id
 	OrderUserId string `bson:"orderUserId"` //주문자
 	OrderMenu []string `bson:"orderMenu"` //주문 메뉴 리스트
-	OrderStatus order_enums.OrderStatus `bosn:"orderStatus"` //주문 상태
-	// TotalPrice int `bson:"totalPrice"` //총 가격
+	OrderStatus order_enums.OrderStatus `bson:"orderStatus"` //주문 상태
 	CreateDate time.Time `bson:"createDate"` //데이터 생성 시각
 	UpdateDate time.Time `bson:"updateDate"` //데이터 수정 시각
 }
@@ -79,7 +78,7 @@ func (c *OrderListCollection) FindByObjectId(objectId interface{}) (*OrderListEn
 }
 
 //Order Id 값으로 조회
-func (c *OrderListCollection) FindByMenuId(orderId string) (*OrderListEntity, error) {
+func (c *OrderListCollection) FindByOrderId(orderId string) (*OrderListEntity, error) {
 	var orderListItem *OrderListEntity
 	query := bson.M{"orderId": orderId}
 	if err := c.OrderListCollection.FindOne(c.Ctx, query).Decode(&orderListItem); err != nil {
@@ -87,6 +86,7 @@ func (c *OrderListCollection) FindByMenuId(orderId string) (*OrderListEntity, er
 	}
 	return orderListItem, nil
 } 
+
 
 
 /////////////////////////
