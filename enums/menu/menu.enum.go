@@ -1,4 +1,4 @@
-package receipt_enums
+package menu_enums
 
 /////////////////////////
 //	Menu Category

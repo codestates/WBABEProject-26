@@ -1,16 +1,16 @@
-package receipt_router
+package menu_router
 
 import (
-	receipt_controller "wemade_project/controller/receipt"
+	menu_controller "wemade_project/controller/menu"
 
 	"github.com/gin-gonic/gin"
 )
 
 type MenuRoute struct {
-	menuController receipt_controller.MenuController 
+	menuController menu_controller.MenuController 
 }
 
-func InitWithSelf(menuController receipt_controller.MenuController ) MenuRoute {
+func InitWithSelf(menuController menu_controller.MenuController ) MenuRoute {
 	return MenuRoute{menuController: menuController}
 }
 

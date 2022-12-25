@@ -1,10 +1,10 @@
-package receipt_model
+package menu_model
 
 import (
 	"context"
 	"errors"
 	"time"
-	receipt_enums "wemade_project/enums/receipt"
+	menu_enums "wemade_project/enums/menu"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -15,7 +15,7 @@ import (
 //음식 기타 정보
 type FoodEtcInfo struct {
 	OriginInfo string //원산지
-	SpicyInfo receipt_enums.FoodSpicyType //맵기 정보
+	SpicyInfo menu_enums.FoodSpicyType //맵기 정보
 }
 
 
@@ -32,10 +32,10 @@ type MenuEntity struct {
 	ID primitive.ObjectID `bson:"_id,omitempty"`
 	Id string `bson:"id"` //고유 id
 	Name string `bson:"name"` //메뉴 이름
-	MenuStatus receipt_enums.MenuSellStatusType `bson:"menuStatus"`	//주문 가능 여부	
+	MenuStatus menu_enums.MenuSellStatusType `bson:"menuStatus"`	//주문 가능 여부	
 	Price int `bson:"price"` //가격
-	Event []receipt_enums.MenuEventType `bson:"event"` //이벤트
-	MenuCategory []receipt_enums.MenuCategoryType `bson:"menuCategory"` //매뉴 카테고리
+	Event []menu_enums.MenuEventType `bson:"event"` //이벤트
+	MenuCategory []menu_enums.MenuCategoryType `bson:"menuCategory"` //매뉴 카테고리
 	SubMenu []SubMenu `bson:"subMenu"` //서브메뉴
 	FoodEtcInfo FoodEtcInfo `bson:"foodEtcInfo"` //기타 정보
 	CreateDate time.Time `bson:"createDate"` //데이터 생성 시각
@@ -116,7 +116,7 @@ func (m *MenuCollection) UpdateEntity(_id primitive.ObjectID, updateSet bson.D) 
 	result := m.MenuCollection.FindOneAndUpdate(m.Ctx, query, update, options.FindOneAndUpdate().SetReturnDocument(1))
 
 	if err := result.Decode(&updateMenu); err != nil {
-		return nil, errors.New("no post with that Id exists")
+		return nil, errors.New("No exist menu id... send id = "+ _id.String())
 	}
 
 	return updateMenu, nil;
