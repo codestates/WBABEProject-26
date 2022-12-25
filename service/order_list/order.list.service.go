@@ -1,6 +1,7 @@
 package order_list_service
 
 import (
+	"errors"
 	"time"
 	"wemade_project/dto"
 	order_list_enums "wemade_project/enums/order"
@@ -8,6 +9,7 @@ import (
 	menu_service "wemade_project/service/menu"
 
 	"github.com/gofrs/uuid"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 /////////////////////////
@@ -55,6 +57,37 @@ func (s *OrderListService) AddItem(addDto dto.CreateOrderListRequest) (*dto.Noma
 
 	return changeEntity2NormalReadDto(*saveItem), nil
 }
+
+/////////////////////////
+//	  Update 
+/////////////////////////
+
+/**
+* 주문 접수 후 메뉴 수정 처리
+*/
+func (s *OrderListService) UpdateOrderList(sendDto dto.UpdateOrderListRequest) (*dto.NomalReadOrderListResponse, error) {
+	//Id를 통해 수정 대상 메뉴 아이템을 찾아온다.
+	findMenu, findErr := s.orderListCollection.FindByOrderId(sendDto.OrderId)
+	if findErr != nil {
+		return nil, findErr
+	}
+
+	//주문 접수 상태가 아니라면 변경 실패 처리한다.
+	if (findMenu.OrderStatus != order_list_enums.OrderReceipt) {
+		return nil, errors.New("Order change fail.")
+	}
+	
+	//먼저 주문 상태를 변경하고 업데이트 처리한다.
+	var setUpdateSet bson.D
+	setUpdateSet = append(setUpdateSet, bson.E{Key: "orderStatus", Value: order_list_enums.OrderAddChange})
+	setUpdateSet = append(setUpdateSet, bson.E{Key: "updateDate", Value: time.Now()})
+	s.orderListCollection.UpdateEntity(findMenu.ID, setUpdateSet)
+
+	//신규 주문 접수 상태를 만들어준다.
+	addDto :=dto.CreateOrderListRequest{OrderUserId: findMenu.OrderUserId, OrderMenuList: sendDto.OrderMenu}
+	return s.AddItem(addDto)
+}
+
 
 
 /////////////////////////

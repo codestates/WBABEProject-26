@@ -9,9 +9,21 @@ import (
 //	 Create Request
 /////////////////////////
 
+/**
+* 초기 주문 요청 리퀘스트
+ */
 type CreateOrderListRequest struct {
 	OrderUserId string `json:"orderUserId" binding:"required"`
 	OrderMenuList []string `json:"orderMenuList" binding:"required"` //주문 메뉴 리스트
+}
+
+
+/**
+* 주문 요청 업데이트 리퀘스트
+*/
+type UpdateOrderListRequest struct {
+	OrderId string `json:"orderId" binding:"required"` //고유 id
+	OrderMenu []string `json:"orderMenu" binding:"required"` //주문 메뉴 리스트
 }
 
 
@@ -29,21 +41,3 @@ type NomalReadOrderListResponse struct {
 	TotalPrice int `json:"totalPrice"` //총 가격
 }
 
-/*
-`json:"orderUserId", binding:"required"` //주문자
-type CreateUserRequest struct {
-	Name string `json:"name" binding:"required" ` //사용자 이름 
-	Phone string `json:"phone" binding:"required"` //사용자 폰번호
-	Addr string `json:"addr" binding:"required"` //주소
-}
-type OrderListEntity struct {
-	ID primitive.ObjectID `bson:"_id,omitempty"`
-	OrderId string `bson:"orderId"` //고유 id
-	OrderUser string `bson:"orderUserId"` //주문자
-	OrderMenu []menu_model.MenuEntity `bson:"orderMenu"` //주문 메뉴 리스트
-	OrderStatus order_enums.OrderStatus `bosn:"orderStatus"` //주문 상태
-	TotalPrice int `bson:"totalPrice"` //총 가격
-	CreateDate time.Time `bson:"createDate"` //데이터 생성 시각
-	UpdateDate time.Time `bson:"updateDate"` //데이터 수정 시각
-}
-*/
