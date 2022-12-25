@@ -2,7 +2,6 @@ package dto
 
 import (
 	order_enums "wemade_project/enums/order"
-	menu_model "wemade_project/model/menu"
 )
 
 /////////////////////////
@@ -36,7 +35,7 @@ type UpdateOrderListRequest struct {
 type NomalReadOrderListResponse struct {
 	OrderId string `json:"orderId"` //고유 id
 	OrderUserId string `json:"orderUserId"` //주문자
-	OrderMenu []menu_model.MenuEntity `json:"orderMenu"` //주문 메뉴 리스트
+	OrderMenu []NormalReadMenuResponse `json:"orderMenu"` //주문 메뉴 리스트
 	OrderStatus order_enums.OrderStatus `json:"orderStatus"` //주문 상태
 	TotalPrice int `json:"totalPrice"` //총 가격
 }

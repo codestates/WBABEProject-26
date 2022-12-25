@@ -1,7 +1,6 @@
 package rating_service
 
 import (
-	"fmt"
 	"time"
 	"wemade_project/dto"
 	rating_model "wemade_project/model/rating"
@@ -34,8 +33,6 @@ func (s *RatingService) FindList4MenuId(menuId string) ([]*dto.FullReadRatingRes
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println("result = ", result)
 
 	var itemList []*dto.FullReadRatingResponse
 

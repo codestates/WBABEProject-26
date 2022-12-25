@@ -87,7 +87,51 @@ func (c *OrderListCollection) FindByOrderId(orderId string) (*OrderListEntity, e
 	return orderListItem, nil
 } 
 
+//User Id로 조회
+func (c *OrderListCollection) Find4OrderUserIdAndStatus(orderUserId string, sortOpt string)  ([]*OrderListEntity, error)  {
+	//검색 대상
+	query := bson.M{"orderStatus": bson.M{"$ne": 4}}
+	
+	//만약 주문 완료 내역만 보는 경우
+	if (sortOpt == "on") {
+		query = bson.M{"orderStatus": bson.M{"$eq": 4}}
+	}
 
+
+	//향후 페이징 처리 필요
+	opt := options.FindOptions{}
+	opt.SetSort(bson.M{"createDate": -1})
+
+	cursor, err := c.OrderListCollection.Find(c.Ctx, query, &opt)
+	if err != nil {
+		return nil, err
+	}
+
+	defer cursor.Close(c.Ctx)
+
+	var orderListItem []*OrderListEntity
+
+	for cursor.Next(c.Ctx) {
+		item := &OrderListEntity{}
+		err := cursor.Decode(item)
+
+		if err != nil {
+			return nil, err
+		}
+
+		orderListItem = append(orderListItem, item)
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	if len(orderListItem) == 0 {
+		return []*OrderListEntity{}, nil
+	}
+
+	return orderListItem, nil
+} 
 
 /////////////////////////
 //		Update
