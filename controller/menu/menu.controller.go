@@ -37,9 +37,37 @@ func InitWithSelf(menuService menu_service.MenuService) MenuController {
 /////////////////////////
 
 //메뉴 조회
-func (mc *MenuController) GetMenu() gin.HandlerFunc {
+/**
+*
+*/
+func (mc *MenuController) GetMenu4MenuId() gin.HandlerFunc {
 	return func(ginCtx *gin.Context) {
-		ginCtx.JSON(http.StatusOK, gin.H{"Message" : "Get Menu"})
+		menuId := ginCtx.Param("menu_id")
+
+		result, mongoErr := mc.menuService.Find4MenuId(menuId)
+		if mongoErr != nil {
+			errorBody := dto.ResponseBody{Result: false, Msg: mongoErr.Error()}
+			ginCtx.JSON(http.StatusBadGateway, errorBody )	
+			return
+		}
+
+		ginCtx.JSON(http.StatusOK, dto.ResponseBody{Result: true, Data: result})
+	}
+}
+
+/**
+* 메뉴 리스트를 가져오는 함수
+*/
+func (mc *MenuController) GetMenuList() gin.HandlerFunc {
+	return func(ginCtx *gin.Context) {
+		result, mongoErr := mc.menuService.FindMenuList()
+		if mongoErr != nil {
+			errorBody := dto.ResponseBody{Result: false, Msg: mongoErr.Error()}
+			ginCtx.JSON(http.StatusBadGateway, errorBody )	
+			return
+		}
+
+		ginCtx.JSON(http.StatusOK, dto.ResponseBody{Result: true, Data: result})
 	}
 }
 

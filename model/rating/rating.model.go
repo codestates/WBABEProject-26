@@ -18,9 +18,9 @@ import (
 
 type RatingEntity struct {
 	ID primitive.ObjectID `bson:"_id,omitempty"`
-	UserId string `bson:"userId"` //주문자
-	OderListId string `bson:"orderListId"` //주문리스트
-	MenuId string `bson:"menuId"` //메뉴
+	UserId string `bson:"userId"` //주문자 (_id)
+	OderListId string `bson:"orderListId"` //주문리스트 (_id)
+	MenuId string `bson:"menuId"` //메뉴 (_id)
 	Rating rating_enum.RatingScore `bson:"rating"`
 	ReviewMsg string `bson:"reviewMsg"`
 	Recommendation bool `bson:"recommendation"`
@@ -52,7 +52,7 @@ func (c *RatingCollection) AddEntity(entity RatingEntity) (*mongo.InsertOneResul
 	result, inErr := c.RatingCollection.InsertOne(c.Ctx, entity)
 
 	opt := options.Index()
-	opt.SetUnique(true)
+	// opt.SetUnique(true)
 
 	//메뉴 Id만 인덱싱을 한다.
 	index := mongo.IndexModel{Keys: bson.M{"menuId": 1}, Options: opt}
@@ -76,6 +76,51 @@ func (c *RatingCollection) FindByObjectId(objectId interface{}) (*RatingEntity, 
 		return nil, err
 	}
 	return menuItem, nil
+}
+
+
+//Menu Id
+func (c *RatingCollection) FindListByMenuId (menuId interface{})  ([]*RatingEntity, error) {
+	// var ratingItem *RatingEntity
+	// if err := c.RatingCollection.FindOne(c.Ctx, query).Decode(&ratingItem); err != nil {
+	// 	return nil, err
+	// }
+
+	query := bson.M{"menuId": menuId}
+
+	//향후 페이징 처리 필요
+	opt := options.FindOptions{}
+	opt.SetSort(bson.M{"createDate": -1})
+
+	cursor, err := c.RatingCollection.Find(c.Ctx, query, &opt)
+	if err != nil {
+		return nil, err
+	}
+
+	defer cursor.Close(c.Ctx)
+
+	var ratingEntityList []*RatingEntity
+
+	for cursor.Next(c.Ctx) {
+		item := &RatingEntity{}
+		err := cursor.Decode(item)
+
+		if err != nil {
+			return nil, err
+		}
+
+		ratingEntityList = append(ratingEntityList, item)
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	if len(ratingEntityList) == 0 {
+		return []*RatingEntity{}, nil
+	}
+
+	return ratingEntityList, nil
 }
 
 /////////////////////////

@@ -92,7 +92,7 @@ func (m *MenuCollection) FindByObjectId(objectId interface{}) (*MenuEntity, erro
 }
 
 //Menu Id 값으로 조회
-func (m *MenuCollection) FindByMenuId(menuId string) (*MenuEntity, error) {
+func (m *MenuCollection) FindEntity2MenuId(menuId string) (*MenuEntity, error) {
 	var menuItem *MenuEntity
 	query := bson.M{"id": menuId}
 	if err := m.MenuCollection.FindOne(m.Ctx, query).Decode(&menuItem); err != nil {
@@ -100,6 +100,46 @@ func (m *MenuCollection) FindByMenuId(menuId string) (*MenuEntity, error) {
 	}
 	return menuItem, nil
 } 
+
+/**
+* 메뉴 리스트를 조회하는 함수
+*/
+func (m *MenuCollection) FindEntityList2All() ( []*MenuEntity, error) {
+	//검색 대상
+	query := bson.M{}
+
+	//향후 페이징 처리 필요
+	opt := options.FindOptions{}
+	opt.SetSort(bson.M{"createDate": -1})
+
+	/*
+	*/
+	//* 각 카테고리별 sort 리스트 출력 order by 추천, 평점, 최신 
+
+	cursor, err := m.MenuCollection.Find(m.Ctx, query, &opt)
+	if err != nil {
+		return nil, err
+	}
+
+	defer cursor.Close(m.Ctx)
+
+	//순회하며 데이터를 추가해준다.
+	var menuEntityList []*MenuEntity
+	for cursor.Next(m.Ctx) {
+		item := &MenuEntity{}
+		err := cursor.Decode(item)
+		if err != nil {
+			return nil, err
+		}
+		menuEntityList = append(menuEntityList, item)
+	}
+	
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	return menuEntityList, nil
+}
 
 /////////////////////////
 //		Update

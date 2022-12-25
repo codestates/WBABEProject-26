@@ -16,10 +16,9 @@ func InitWithSelf(ratingController rating_controller.RatingController ) RatingRo
 }
 
 func (r *RatingRoute) InitWithRoute(server *gin.Engine) {
-	orderListRouterV1 := server.Group("/api/v1/rating")
+	ratingRouterV1 := server.Group("/api/v1/rating")
 	{
-		orderListRouterV1.GET("menu/get",)
-		// orderListRouterV1.POST("/menu/add",r.menuController.AddMenu())
+		ratingRouterV1.POST("/add",r.ratingController.AddRating()) //메뉴 리뷰 등록
 		// orderListRouterV1.PUT("/menu/update", r.menuController.UpdateMenu())
 		// orderListRouterV1.DELETE("/menu/delete/:menu_id", r.menuController.DeleteMenu4Logical())
 	}

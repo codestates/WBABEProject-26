@@ -5,7 +5,6 @@ import (
 	"errors"
 	"time"
 	order_enums "wemade_project/enums/order"
-	menu_model "wemade_project/model/menu"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -20,10 +19,10 @@ import (
 type OrderListEntity struct {
 	ID primitive.ObjectID `bson:"_id,omitempty"`
 	OrderId string `bson:"orderId"` //고유 id
-	OrderUser string `bson:"orderUserId"` //주문자
-	OrderMenu []menu_model.MenuEntity `bson:"orderMenu"` //주문 메뉴 리스트
+	OrderUserId string `bson:"orderUserId"` //주문자
+	OrderMenu []string `bson:"orderMenu"` //주문 메뉴 리스트
 	OrderStatus order_enums.OrderStatus `bosn:"orderStatus"` //주문 상태
-	TotalPrice int `bson:"totalPrice"` //총 가격
+	// TotalPrice int `bson:"totalPrice"` //총 가격
 	CreateDate time.Time `bson:"createDate"` //데이터 생성 시각
 	UpdateDate time.Time `bson:"updateDate"` //데이터 수정 시각
 }
@@ -56,7 +55,7 @@ func (c *OrderListCollection) AddEntity(entity OrderListEntity) (*mongo.InsertOn
 	opt := options.Index()
 	opt.SetUnique(true)
 
-	index := mongo.IndexModel{Keys: bson.M{"id": 1}, Options: opt}
+	index := mongo.IndexModel{Keys: bson.M{"orderId": 1}, Options: opt}
 	if _, err1 := c.OrderListCollection.Indexes().CreateOne(c.Ctx, index); err1 != nil {
 		return nil, errors.New("could not create index for OrderList Id")
 	}
@@ -131,3 +130,5 @@ func (c *OrderListCollection) deleteEntity(_id primitive.ObjectID) error {
 	}
 	return nil
 }
+
+

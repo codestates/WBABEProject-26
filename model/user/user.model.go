@@ -3,6 +3,7 @@ package user_model
 import (
 	"context"
 	"errors"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -19,6 +20,8 @@ type UserEntity struct {
 	Name string `bson:"name"` //사용자 이름 
 	Phone string `bson:"phone"` //사용자 폰번호
 	Addr string `bson:"addr"` //주소
+	CreateDate time.Time `bson:"createDate"` //데이터 생성 시각
+	UpdateDate time.Time `bson:"updateDate"` //데이터 수정 시각
 }
 
 type UserCollection struct {
