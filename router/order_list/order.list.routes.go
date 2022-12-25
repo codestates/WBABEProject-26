@@ -18,6 +18,9 @@ func InitWithSelf(orderListController order_list_controller.OrderListController 
 func (r *OrderListRoute) InitWithRoute(server *gin.Engine) {
 	orderListRouterV1 := server.Group("/api/v1/order_list")
 	{
+		//
+		orderListRouterV1.GET("order/user/:user_id", r.orderListController.Find4OrderUserId())
+		
 		//주문 접수
 		orderListRouterV1.POST("/order/add", r.orderListController.AddOrderListItem())
 		orderListRouterV1.PUT("/order/update", r.orderListController.UpdateOrderList())

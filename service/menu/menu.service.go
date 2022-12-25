@@ -63,7 +63,7 @@ func (ms *MenuService) FindMenuList() ([]dto.HalfReadMenuResponse, error) {
 
 	var result []dto.HalfReadMenuResponse
 	for _, menuItem := range menuList {
-		result = append(result, *changeEntity2HalfReadDto(*menuItem))
+		result = append(result, *ms.ChangeEntity2HalfReadDto(*menuItem))
 	}
 	
 	return result, nil
@@ -92,7 +92,7 @@ func (ms *MenuService) AddMenuItem(addDto dto.CreateMenuRequest) (*dto.HalfReadM
 		return nil, err1
 	}
 
-	return changeEntity2HalfReadDto(*saveItem), nil
+	return ms.ChangeEntity2HalfReadDto(*saveItem), nil
 }
 
 
@@ -141,7 +141,7 @@ func (ms *MenuService) UpdateMenuItem(sendDto dto.UpdateMenuRequest) (*dto.HalfR
 		return nil, err1
 	}
 
-	return changeEntity2HalfReadDto(*saveItem), nil
+	return ms.ChangeEntity2HalfReadDto(*saveItem), nil
 } 
 
 
@@ -158,7 +158,7 @@ func (ms *MenuService) UpdateMenuItem(sendDto dto.UpdateMenuRequest) (*dto.HalfR
 /////////////////////////
 
 //메뉴 엔티티를 읽기 DTO로 변환시키는 함수
-func changeEntity2HalfReadDto(entity menu_model.MenuEntity) *dto.HalfReadMenuResponse {
+func (ms *MenuService) ChangeEntity2HalfReadDto(entity menu_model.MenuEntity) *dto.HalfReadMenuResponse {
 	var subMenu []dto.SubMenuRequest
 	for _, val := range entity.SubMenu {
 		item := dto.SubMenuRequest{SubMenuName: val.SubMenuName, Name: val.Name, Price: val.Price}

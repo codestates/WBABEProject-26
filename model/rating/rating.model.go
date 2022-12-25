@@ -81,11 +81,6 @@ func (c *RatingCollection) FindByObjectId(objectId interface{}) (*RatingEntity, 
 
 //Menu Id
 func (c *RatingCollection) FindListByMenuId (menuId interface{})  ([]*RatingEntity, error) {
-	// var ratingItem *RatingEntity
-	// if err := c.RatingCollection.FindOne(c.Ctx, query).Decode(&ratingItem); err != nil {
-	// 	return nil, err
-	// }
-
 	query := bson.M{"menuId": menuId}
 
 	//향후 페이징 처리 필요

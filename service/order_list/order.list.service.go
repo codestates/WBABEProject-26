@@ -32,6 +32,29 @@ func InitWithSelf(model order_list_model.OrderListCollection, menuService menu_s
 
 
 /////////////////////////
+//	  Find
+/////////////////////////
+
+/**
+* Order User Id로 데이터를 조회하는 함수
+*/
+func (s *OrderListService) Find4OrderUserId(orderUserId string, sortOpt string) ([]*dto.NomalReadOrderListResponse, error) {
+	//등록된 아이템을 반환하기 위해 조회
+	findItem, err1 := s.orderListCollection.Find4OrderUserIdAndStatus(orderUserId, sortOpt)
+	if err1 != nil {
+		return nil, err1
+	}
+
+	var itemList []*dto.NomalReadOrderListResponse
+	for _, item := range findItem {
+		itemList = append(itemList, s.changeEntity2FullReadDto(*item))
+	}
+
+	return itemList, nil
+}
+
+
+/////////////////////////
 //	  Add Data
 /////////////////////////
 
@@ -55,7 +78,7 @@ func (s *OrderListService) AddItem(addDto dto.CreateOrderListRequest) (*dto.Noma
 		return nil, err1
 	}
 
-	return changeEntity2NormalReadDto(*saveItem), nil
+	return s.changeEntity2NormalReadDto(*saveItem), nil
 }
 
 /////////////////////////
@@ -110,8 +133,18 @@ func changeCreateOrderListDto2Entity(sendDto dto.CreateOrderListRequest) order_l
 
 
 //Entity 2 Normal read dto Mapping
-func changeEntity2NormalReadDto(entity order_list_model.OrderListEntity) *dto.NomalReadOrderListResponse {
-	return &dto.NomalReadOrderListResponse{OrderId: entity.OrderId, OrderUserId: entity.OrderUserId, OrderStatus:  entity.OrderStatus, TotalPrice: 0 }
+func (s *OrderListService) changeEntity2NormalReadDto(entity order_list_model.OrderListEntity) *dto.NomalReadOrderListResponse {
+	return &dto.NomalReadOrderListResponse{OrderId: entity.OrderId, OrderUserId: entity.OrderUserId, OrderStatus:  entity.OrderStatus, TotalPrice: s.GetTotalPrice(entity.OrderMenu)}
+}
+
+func (s *OrderListService) changeEntity2FullReadDto(entity order_list_model.OrderListEntity) *dto.NomalReadOrderListResponse {
+
+	var menuList []dto.NormalReadMenuResponse
+	for _, item := range entity.OrderMenu {
+		menuData, _ := s.menuService.Find4MenuId(item)
+		menuList = append(menuList, dto.NormalReadMenuResponse{Name: menuData.Name, Price: menuData.Price, MenuCategory: menuData.MenuCategory, FoodEtcInfo: menuData.FoodEtcInfo} )
+	}
+	return &dto.NomalReadOrderListResponse{OrderId: entity.OrderId, OrderUserId: entity.OrderUserId, OrderStatus:  entity.OrderStatus, TotalPrice: s.GetTotalPrice(entity.OrderMenu), OrderMenu:menuList  }
 }
 
  
