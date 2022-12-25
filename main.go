@@ -12,13 +12,24 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 
 	oosConfig "wemade_project/config"
-	receipt_controller "wemade_project/controller/receipt"
+	menu_controller "wemade_project/controller/menu"
+	order_list_controller "wemade_project/controller/order_list"
+	rating_controller "wemade_project/controller/rating"
+	user_controller "wemade_project/controller/user"
 	oos_valid "wemade_project/controller/validators"
-	receipt_model "wemade_project/model/receipt"
-	receipt_router "wemade_project/router/receipt"
-	receipt_service "wemade_project/service/receipt"
-
+	menu_model "wemade_project/model/menu"
+	order_list_model "wemade_project/model/order"
+	rating_model "wemade_project/model/rating"
 	user_model "wemade_project/model/user"
+	menu_router "wemade_project/router/menu"
+	order_list_router "wemade_project/router/order_list"
+	rating_route "wemade_project/router/rating"
+	menu_service "wemade_project/service/menu"
+	order_list_service "wemade_project/service/order_list"
+	rating_service "wemade_project/service/rating"
+	user_service "wemade_project/service/user"
+
+	user_route "wemade_project/router/user"
 )
 
 var (
@@ -30,14 +41,31 @@ var (
 
 	//Menu
 	menuCollection *mongo.Collection	
-	menuModel receipt_model.MenuCollection
-	menuService receipt_service.MenuService
-	menuController receipt_controller.MenuController
-	menuRouter receipt_router.MenuRoute
+	menuModel menu_model.MenuCollection
+	menuService menu_service.MenuService
+	menuController menu_controller.MenuController
+	menuRouter menu_router.MenuRoute
 
 	//User
 	userCollection *mongo.Collection	
 	userModel user_model.UserCollection
+	userService user_service.UserService
+	userController user_controller.UserController
+	userRouter user_route.UserRoute
+
+	//OrderList
+	orderListCollection *mongo.Collection
+	orderListModel order_list_model.OrderListCollection
+	orderListService order_list_service.OrderListService
+	orderListController order_list_controller.OrderListController
+	orderListRouter order_list_router.OrderListRoute
+
+	//Rating
+	ratingCollection *mongo.Collection
+	ratingModel rating_model.RatingCollection
+	ratingService rating_service.RatingService
+	ratingController rating_controller.RatingController
+	ratingRoute rating_route.RatingRoute
 )
 
 //init 함수
@@ -72,16 +100,34 @@ func init() {
 	mongoDB := mongoClient.Database("sso")
 	menuCollection = mongoDB.Collection("menu")
 	userCollection = mongoDB.Collection("users")
+	orderListCollection = mongoDB.Collection("order_list")
+	ratingCollection = mongoDB.Collection("rating")
 
 	//Menu
-	menuModel = receipt_model.InitWithSelf(menuCollection, ctx);
-	menuService = receipt_service.InitWithSelf(menuModel);
-	menuController = receipt_controller.InitWithSelf(menuService)
-	menuRouter = receipt_router.InitWithSelf(menuController)
+	menuModel = menu_model.InitWithSelf(menuCollection, ctx);
+	menuService = menu_service.InitWithSelf(menuModel);
+	menuController = menu_controller.InitWithSelf(menuService)
+	menuRouter = menu_router.InitWithSelf(menuController)
 
 	//User
 	userModel = user_model.InitWithSelf(userCollection, ctx)
+	userService = user_service.InitWithSelf(userModel)
+	userController = user_controller.InitWithSelf(userService)
+	userRouter = user_route.InitWithSelf(userController)
 
+	//OrderList
+	orderListModel = order_list_model.InitWithSelf(orderListCollection, ctx)
+	orderListService = order_list_service.InitWithSelf(orderListModel)
+	orderListController = order_list_controller.InitWithSelf(orderListService)
+	orderListRouter = order_list_router.InitWithSelf(orderListController)
+
+	//Rating
+	ratingModel = rating_model.InitWithSelf(ratingCollection, ctx)
+	ratingService = rating_service.InitWithSelf(ratingModel)
+	ratingController = rating_controller.InitWithSelf(ratingService)
+	ratingRoute =rating_route.InitWithSelf(ratingController)
+	
+	
 	//Add Validator
 	oos_valid.RegValidator4MenuEvent()
 

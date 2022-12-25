@@ -1,13 +1,13 @@
-package receipt_controller
+package menu_controller
 
 import (
 	"fmt"
 	"net/http"
 
 	"wemade_project/dto"
-	receipt_dto "wemade_project/dto"
-	receipt_enums "wemade_project/enums/receipt"
-	receipt_service "wemade_project/service/receipt"
+	menu_dto "wemade_project/dto"
+	menu_enums "wemade_project/enums/menu"
+	menu_service "wemade_project/service/menu"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -18,7 +18,7 @@ import (
 /////////////////////////
 
 type MenuController struct {
-	menuService receipt_service.MenuService
+	menuService menu_service.MenuService
 }
 
 
@@ -27,7 +27,7 @@ type MenuController struct {
 /////////////////////////
 
 //생성자 역할 함수
-func InitWithSelf(menuService receipt_service.MenuService) MenuController {
+func InitWithSelf(menuService menu_service.MenuService) MenuController {
 	return MenuController{menuService: menuService}
 }
 
@@ -51,7 +51,7 @@ func (mc *MenuController) GetMenu() gin.HandlerFunc {
 func (mc *MenuController) AddMenu() gin.HandlerFunc {
 	return func(ginCtx *gin.Context) {
 		//요청 데이터를 확인한다.
-		var addMenuReq receipt_dto.CreateMenuRequest;
+		var addMenuReq menu_dto.CreateMenuRequest;
 
 		if err := ginCtx.ShouldBindJSON(&addMenuReq); err != nil {
 			fmt.Println("err = ", err )
@@ -83,7 +83,7 @@ func (mc *MenuController) AddMenu() gin.HandlerFunc {
 func (mc *MenuController) UpdateMenu() gin.HandlerFunc {
 	return func(ginCtx *gin.Context) {
 		//UpdateMenuRequest
-		var updateMenuReq receipt_dto.UpdateMenuRequest
+		var updateMenuReq menu_dto.UpdateMenuRequest
 
 		if err := ginCtx.BindJSON(&updateMenuReq); err != nil {
 			errorBody := dto.ResponseBody{Result: false, Msg: err}
@@ -110,7 +110,7 @@ func (mc *MenuController) UpdateMenu() gin.HandlerFunc {
 //Menu 아이템을 논리적으로 삭제하는 함수
 func (mc *MenuController) DeleteMenu4Logical() gin.HandlerFunc {
 	return func(ginCtx *gin.Context) {
-		updateDto := dto.UpdateMenuRequest{Id: ginCtx.Param("menu_id"), MenuStatus: receipt_enums.MSS_Delete }
+		updateDto := dto.UpdateMenuRequest{Id: ginCtx.Param("menu_id"), MenuStatus: menu_enums.MSS_Delete }
 
 		_, mongoErr := mc.menuService.UpdateMenuItem(updateDto);
 		if mongoErr != nil {

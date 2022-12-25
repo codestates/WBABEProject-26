@@ -47,9 +47,9 @@ func (c *UserCollection) AddEntity(entity UserEntity) (*mongo.InsertOneResult, e
 	opt := options.Index()
 	opt.SetUnique(true)
 
-	index := mongo.IndexModel{Keys: bson.M{"id": 1}, Options: opt}
+	index := mongo.IndexModel{Keys: bson.M{"phone": 1}, Options: opt}
 	if _, err1 := c.UserCollection.Indexes().CreateOne(c.Ctx, index); err1 != nil {
-		return nil, errors.New("could not create index for menu Id")
+		return nil, errors.New("could not create index for user Id")
 	}
 	
 	return result, inErr
@@ -96,7 +96,7 @@ func (c *UserCollection) UpdateEntity(_id primitive.ObjectID, updateSet bson.D) 
 	result := c.UserCollection.FindOneAndUpdate(c.Ctx, query, update, options.FindOneAndUpdate().SetReturnDocument(1))
 
 	if err := result.Decode(&updateMenu); err != nil {
-		return nil, errors.New("no post with that Id exists")
+		return nil, errors.New("No exist user id... send id = "+ _id.String())
 	}
 
 	return updateMenu, nil;
