@@ -54,6 +54,21 @@ func (s *OrderListService) Find4OrderUserId(orderUserId string, sortOpt string) 
 }
 
 
+func (s *OrderListService) Find4All() ([]*dto.NomalReadOrderListResponse, error)  {
+	//등록된 아이템을 반환하기 위해 조회
+	findItem, err1 := s.orderListCollection.FindByAll()
+	if err1 != nil {
+		return nil, err1
+	}
+
+	var itemList []*dto.NomalReadOrderListResponse
+	for _, item := range findItem {
+		itemList = append(itemList, s.changeEntity2FullReadDto(*item))
+	}
+
+	return itemList, nil
+}
+
 /////////////////////////
 //	  Add Data
 /////////////////////////
