@@ -40,9 +40,6 @@ func (c *OrderListController) AddOrderListItem() gin.HandlerFunc {
 		if err := ginCtx.ShouldBindJSON(&addReq); err != nil {
 			errorBody := dto.ResponseBody{Result: false, Msg: err.Error()}
 			ginCtx.JSON(http.StatusBadRequest, errorBody )	
-			//예외 바인딩
-			// handleBindError(ginCtx, addReq, "checkerMenuEvent", err)
-			// return 
 		}
 
 		//전달된 아이템 등록 처리
