@@ -34,6 +34,9 @@ func InitWithSelf(model order_list_model.OrderListCollection, menuService menu_s
 /////////////////////////
 
 //Add Order item 
+/**
+* 주문 요청 등록
+*/
 func (s *OrderListService) AddItem(addDto dto.CreateOrderListRequest) (*dto.NomalReadOrderListResponse, error) {
 	//Model 조립
 	entity := changeCreateOrderListDto2Entity(addDto)
@@ -65,7 +68,7 @@ func changeCreateOrderListDto2Entity(sendDto dto.CreateOrderListRequest) order_l
 	entity.OrderId = uuid.Must(uuid.NewV4()).String()
 	entity.OrderUserId = sendDto.OrderUserId
 	entity.OrderMenu = sendDto.OrderMenuList
-	entity.OrderStatus = order_list_enums.OrderReceipt
+	entity.OrderStatus = order_list_enums.OrderReceipt //초기 상태는 주문 요청으로 기본 접수한다.
 	entity.CreateDate = time.Now()
 	entity.UpdateDate = entity.CreateDate
 
