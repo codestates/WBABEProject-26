@@ -103,10 +103,11 @@ func (c *OrderListController) AddOrderListItem() gin.HandlerFunc {
 //	  Update
 /////////////////////////
 
-func (c *OrderListController) UpdateOrderList()  gin.HandlerFunc {
+//주문 내역 업데이트 처리
+func (c *OrderListController) UpdateOrderList4Menu()  gin.HandlerFunc {
 	return func(ginCtx *gin.Context) {
 		//요청 데이터를 확인한다.
-		var updateReq dto.UpdateOrderListRequest
+		var updateReq dto.UpdateOrderList4MenuRequest
 
 		if err := ginCtx.ShouldBindJSON(&updateReq); err != nil {
 			errorBody := dto.ResponseBody{Result: false, Msg: err.Error()}
@@ -114,7 +115,32 @@ func (c *OrderListController) UpdateOrderList()  gin.HandlerFunc {
 		}
 
 		//전달된 아이템 등록 처리
-		result, mongoErr := c.orderListService.UpdateOrderList(updateReq)
+		result, mongoErr := c.orderListService.UpdateOrderList4Menu(updateReq)
+		//조회에 에러가 난 경우
+		if mongoErr != nil {
+			errorBody := dto.ResponseBody{Result: false, Msg: mongoErr.Error()}
+			ginCtx.JSON(http.StatusBadGateway, errorBody )	
+			return
+		}
+
+
+		ginCtx.JSON(http.StatusOK, dto.ResponseBody{Result: true, Data: result})
+	}
+}
+
+//주문 내역 업데이트 처리
+func (c *OrderListController) UpdateOrderList4Status()  gin.HandlerFunc {
+	return func(ginCtx *gin.Context) {
+		//요청 데이터를 확인한다.
+		var updateReq dto.UpdateOrderList4StatusRequest
+
+		if err := ginCtx.ShouldBindJSON(&updateReq); err != nil {
+			errorBody := dto.ResponseBody{Result: false, Msg: err.Error()}
+			ginCtx.JSON(http.StatusBadRequest, errorBody )	
+		}
+
+		//전달된 아이템 등록 처리
+		result, mongoErr := c.orderListService.UpdateOrderList4Status(updateReq)
 		//조회에 에러가 난 경우
 		if mongoErr != nil {
 			errorBody := dto.ResponseBody{Result: false, Msg: mongoErr.Error()}

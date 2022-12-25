@@ -103,7 +103,7 @@ func (s *OrderListService) AddItem(addDto dto.CreateOrderListRequest) (*dto.Noma
 /**
 * 주문 접수 후 메뉴 수정 처리
 */
-func (s *OrderListService) UpdateOrderList(sendDto dto.UpdateOrderListRequest) (*dto.NomalReadOrderListResponse, error) {
+func (s *OrderListService) UpdateOrderList4Menu(sendDto dto.UpdateOrderList4MenuRequest) (*dto.NomalReadOrderListResponse, error) {
 	//Id를 통해 수정 대상 메뉴 아이템을 찾아온다.
 	findMenu, findErr := s.orderListCollection.FindByOrderId(sendDto.OrderId)
 	if findErr != nil {
@@ -126,6 +126,30 @@ func (s *OrderListService) UpdateOrderList(sendDto dto.UpdateOrderListRequest) (
 	return s.AddItem(addDto)
 }
 
+
+//상태 업데이트
+func (s *OrderListService) UpdateOrderList4Status(sendDto dto.UpdateOrderList4StatusRequest) (*dto.NomalReadOrderListResponse, error) {
+	//Id를 통해 수정 대상 메뉴 아이템을 찾아온다.
+	findMenu, findErr := s.orderListCollection.FindByOrderId(sendDto.OrderId)
+	if findErr != nil {
+		return nil, findErr
+	}
+
+	//먼저 주문 상태를 변경하고 업데이트 처리한다.
+	var setUpdateSet bson.D
+	setUpdateSet = append(setUpdateSet, bson.E{Key: "orderStatus", Value: sendDto.OrderStatus})
+	setUpdateSet = append(setUpdateSet, bson.E{Key: "updateDate", Value: time.Now()})
+	s.orderListCollection.UpdateEntity(findMenu.ID, setUpdateSet)
+
+
+	//등록된 아이템을 반환하기 위해 조회
+	saveItem, err1 := s.orderListCollection.FindByObjectId(findMenu.ID); 
+	if err1 != nil {
+		return nil, err1
+	}
+	
+	return s.changeEntity2NormalReadDto(*saveItem), nil
+}
 
 
 /////////////////////////
