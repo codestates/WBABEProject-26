@@ -5,6 +5,7 @@ import (
 
 	"wemade_project/dto"
 	menu_model "wemade_project/model/menu"
+	rating_service "wemade_project/service/rating"
 
 	"github.com/gofrs/uuid"
 	"go.mongodb.org/mongo-driver/bson"
@@ -16,6 +17,7 @@ import (
 
 type MenuService struct {
 	memuCollection menu_model.MenuCollection
+	ratingService rating_service.RatingService
 }
 
 /////////////////////////
@@ -23,8 +25,8 @@ type MenuService struct {
 /////////////////////////
 
 
-func InitWithSelf(model menu_model.MenuCollection) MenuService {
-	return MenuService{memuCollection: model }
+func InitWithSelf(model menu_model.MenuCollection, ratingService rating_service.RatingService) MenuService {
+	return MenuService{memuCollection: model, ratingService:  ratingService }
 }
 
 
@@ -32,14 +34,39 @@ func InitWithSelf(model menu_model.MenuCollection) MenuService {
 //	  Find Data
 /////////////////////////
 
-//메뉴 id로 엔티티 데이터를 조회하는 함수
-func (ms *MenuService) Find4MenuId(id string) (*dto.HalfReadMenuResponse, error) {
-	findMenu, findErr := ms.memuCollection.FindByMenuId(id)
+/**
+* 메뉴 id(고유Id, _id 아님)로 엔티티 데이터를 조회하는 함수
+*/
+func (ms *MenuService) Find4MenuId(menuId string) (*dto.ReadMenuRatingResponse, error) {
+	findMenu, menuFindErr := ms.memuCollection.FindEntity2MenuId(menuId)
+	if menuFindErr != nil {
+		return nil, menuFindErr
+	}
+
+	//메뉴 평점도 같이 가지고 온다.
+	findRating, raringErr := ms.ratingService.FindList4MenuId(findMenu.Id)
+	if raringErr != nil {
+		return nil, raringErr
+	}
+
+	return changeEntity2MenuRatingDto(*findMenu, findRating), nil
+}
+
+/**
+* 메뉴 리스트 조회
+*/
+func (ms *MenuService) FindMenuList() ([]dto.HalfReadMenuResponse, error) {
+	menuList, findErr := ms.memuCollection.FindEntityList2All()
 	if findErr != nil {
 		return nil, findErr
 	}
+
+	var result []dto.HalfReadMenuResponse
+	for _, menuItem := range menuList {
+		result = append(result, *changeEntity2HalfReadDto(*menuItem))
+	}
 	
-	return changeMenuEntity2HalfReadDto(*findMenu), nil
+	return result, nil
 }
 
 /////////////////////////
@@ -65,7 +92,7 @@ func (ms *MenuService) AddMenuItem(addDto dto.CreateMenuRequest) (*dto.HalfReadM
 		return nil, err1
 	}
 
-	return changeMenuEntity2HalfReadDto(*saveItem), nil
+	return changeEntity2HalfReadDto(*saveItem), nil
 }
 
 
@@ -76,7 +103,7 @@ func (ms *MenuService) AddMenuItem(addDto dto.CreateMenuRequest) (*dto.HalfReadM
 //메뉴 업데이트
 func (ms *MenuService) UpdateMenuItem(sendDto dto.UpdateMenuRequest) (*dto.HalfReadMenuResponse, error) {
 	//Id를 통해 수정 대상 메뉴 아이템을 찾아온다.
-	findMenu, findErr := ms.memuCollection.FindByMenuId(sendDto.Id)
+	findMenu, findErr := ms.memuCollection.FindEntity2MenuId(sendDto.Id)
 	if findErr != nil {
 		return nil, findErr
 	}
@@ -114,7 +141,7 @@ func (ms *MenuService) UpdateMenuItem(sendDto dto.UpdateMenuRequest) (*dto.HalfR
 		return nil, err1
 	}
 
-	return changeMenuEntity2HalfReadDto(*saveItem), nil
+	return changeEntity2HalfReadDto(*saveItem), nil
 } 
 
 
@@ -131,7 +158,7 @@ func (ms *MenuService) UpdateMenuItem(sendDto dto.UpdateMenuRequest) (*dto.HalfR
 /////////////////////////
 
 //메뉴 엔티티를 읽기 DTO로 변환시키는 함수
-func changeMenuEntity2HalfReadDto(entity menu_model.MenuEntity) *dto.HalfReadMenuResponse {
+func changeEntity2HalfReadDto(entity menu_model.MenuEntity) *dto.HalfReadMenuResponse {
 	var subMenu []dto.SubMenuRequest
 	for _, val := range entity.SubMenu {
 		item := dto.SubMenuRequest{SubMenuName: val.SubMenuName, Name: val.Name, Price: val.Price}
@@ -140,6 +167,25 @@ func changeMenuEntity2HalfReadDto(entity menu_model.MenuEntity) *dto.HalfReadMen
 
 	return &dto.HalfReadMenuResponse{Id: entity.Id, Name:  entity.Name, MenuStatus: entity.MenuStatus, Price: entity.Price, Event: entity.Event, MenuCategory: entity.MenuCategory, SubMenu:  subMenu, FoodEtcInfo: dto.FoodEtcInfoRequest(entity.FoodEtcInfo), CreateDate: entity.CreateDate, UpdateDate: entity.UpdateDate}
 }
+
+func changeEntity2MenuRatingDto(entity menu_model.MenuEntity, rating []*dto.FullReadRatingResponse) *dto.ReadMenuRatingResponse {
+	var subMenu []dto.SubMenuRequest
+	for _, val := range entity.SubMenu {
+		item := dto.SubMenuRequest{SubMenuName: val.SubMenuName, Name: val.Name, Price: val.Price}
+		subMenu = append(subMenu, item)
+	}
+
+	//(평점 부분) Dto를 위한 형 변환 작업 처리
+	var tmpData []dto.FullReadRatingResponse
+	for _, item := range rating {
+		tmpData = append(tmpData, *(item))
+	}
+	
+	return &dto.ReadMenuRatingResponse{Id: entity.Id, Name:  entity.Name, MenuStatus: entity.MenuStatus, Price: entity.Price, Event: entity.Event, MenuCategory: entity.MenuCategory, 
+		SubMenu:  subMenu, FoodEtcInfo: dto.FoodEtcInfoRequest(entity.FoodEtcInfo), Rating: tmpData, CreateDate: entity.CreateDate, UpdateDate: entity.UpdateDate}
+}
+
+
 
 //공통 MenuRequest 데이터 중 일부를 Entity랑 매핑하는 함수
 func changeMenuRequest2Entity(sendDto dto.MenuRequest) menu_model.MenuEntity {

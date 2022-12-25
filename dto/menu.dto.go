@@ -33,9 +33,6 @@ type MenuRequest struct {
 	FoodEtcInfo FoodEtcInfoRequest `json:"etcInfo,omitempty"`
 }
 
-/*
-
-*/
 
 /////////////////////////
 //	 Create Request
@@ -88,7 +85,21 @@ type HalfReadMenuResponse struct {
 	UpdateDate time.Time `json:"updateDate"` //데이터 수정 시각
 }
 
-//RecommendationCount []string `bson:"recommendation_count"` //메뉴 추천수
+//메뉴와 해당 메뉴의 리뷰 함께 응답
+type ReadMenuRatingResponse struct {
+	Id string `json:"id"`
+	Name string `json:"name"` //메뉴 이름
+	MenuStatus menu_enums.MenuSellStatusType `json:"menuStaus"`	//주문 가능 여부	
+	Price int `json:"price"` //가격
+	Event []menu_enums.MenuEventType `json:"event"` //이벤트
+	MenuCategory []menu_enums.MenuCategoryType `json:"menuCategory"` //매뉴 카테고리
+	SubMenu []SubMenuRequest `json:"subMenu"` //서브메뉴
+	FoodEtcInfo FoodEtcInfoRequest `json:"foodEtcInfo"` //기타 정보
+	Rating []FullReadRatingResponse `json:"rating"`
+	CreateDate time.Time `json:"createDate"` //데이터 생성 시각
+	UpdateDate time.Time `json:"updateDate"` //데이터 수정 시각
+}
+
 
 type NormalReadMenuResponse struct {
 	Id string `json:"id"`

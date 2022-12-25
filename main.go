@@ -103,9 +103,15 @@ func init() {
 	orderListCollection = mongoDB.Collection("order_list")
 	ratingCollection = mongoDB.Collection("rating")
 
+	//Rating
+	ratingModel = rating_model.InitWithSelf(ratingCollection, ctx)
+	ratingService = rating_service.InitWithSelf(ratingModel)
+	ratingController = rating_controller.InitWithSelf(ratingService)
+	ratingRoute =rating_route.InitWithSelf(ratingController)
+
 	//Menu
 	menuModel = menu_model.InitWithSelf(menuCollection, ctx);
-	menuService = menu_service.InitWithSelf(menuModel);
+	menuService = menu_service.InitWithSelf(menuModel, ratingService);
 	menuController = menu_controller.InitWithSelf(menuService)
 	menuRouter = menu_router.InitWithSelf(menuController)
 
@@ -117,17 +123,12 @@ func init() {
 
 	//OrderList
 	orderListModel = order_list_model.InitWithSelf(orderListCollection, ctx)
-	orderListService = order_list_service.InitWithSelf(orderListModel)
+	orderListService = order_list_service.InitWithSelf(orderListModel, menuService)
 	orderListController = order_list_controller.InitWithSelf(orderListService)
 	orderListRouter = order_list_router.InitWithSelf(orderListController)
 
-	//Rating
-	ratingModel = rating_model.InitWithSelf(ratingCollection, ctx)
-	ratingService = rating_service.InitWithSelf(ratingModel)
-	ratingController = rating_controller.InitWithSelf(ratingService)
-	ratingRoute =rating_route.InitWithSelf(ratingController)
 	
-	
+
 	//Add Validator
 	oos_valid.RegValidator4MenuEvent()
 
@@ -166,7 +167,9 @@ func startGinServer( ) {
 
 	//Menu Route Setup
 	menuRouter.InitWithRoute(server)
-	
+	userRouter.InitWithRoute(server)
+	orderListRouter.InitWithRoute(server)
+	ratingRoute.InitWithRoute(server)
 
 	
 	log.Fatal(server.Run(":" + strconv.Itoa(config.Server.Port)))

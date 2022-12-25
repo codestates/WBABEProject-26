@@ -18,8 +18,10 @@ func InitWithSelf(orderListController order_list_controller.OrderListController 
 func (r *OrderListRoute) InitWithRoute(server *gin.Engine) {
 	orderListRouterV1 := server.Group("/api/v1/order_list")
 	{
-		orderListRouterV1.GET("menu/get",)
-		// orderListRouterV1.POST("/menu/add",r.menuController.AddMenu())
+		//주문 접수
+		orderListRouterV1.POST("/order/add", r.orderListController.AddOrderListItem())
+
+		
 		// orderListRouterV1.PUT("/menu/update", r.menuController.UpdateMenu())
 		// orderListRouterV1.DELETE("/menu/delete/:menu_id", r.menuController.DeleteMenu4Logical())
 	}
