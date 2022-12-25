@@ -30,7 +30,7 @@ func InitWithSelf(orderListService order_list_service.OrderListService) OrderLis
 //	  Find
 /////////////////////////
 
-//
+//사용자 아이디로 조회
 func (c *OrderListController) Find4OrderUserId() gin.HandlerFunc {
 	return func(ginCtx *gin.Context) {
 		userId := ginCtx.Param("user_id")
@@ -38,6 +38,24 @@ func (c *OrderListController) Find4OrderUserId() gin.HandlerFunc {
 
 		//전달된 아이템 등록 처리
 		result, mongoErr := c.orderListService.Find4OrderUserId(userId, sortOption)
+
+		//조회에 에러가 난 경우
+		if mongoErr != nil {
+			errorBody := dto.ResponseBody{Result: false, Msg: mongoErr.Error()}
+			ginCtx.JSON(http.StatusBadGateway, errorBody )	
+			return
+		}
+	
+		ginCtx.JSON(http.StatusOK, dto.ResponseBody{Result: true, Data: result})
+	}
+}
+
+
+func (c *OrderListController) Find4All() gin.HandlerFunc {
+	return func(ginCtx *gin.Context) {
+		
+		//전달된 아이템 등록 처리
+		result, mongoErr := c.orderListService.Find4All()
 
 		//조회에 에러가 난 경우
 		if mongoErr != nil {

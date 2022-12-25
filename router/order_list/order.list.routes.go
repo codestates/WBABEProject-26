@@ -20,6 +20,7 @@ func (r *OrderListRoute) InitWithRoute(server *gin.Engine) {
 	{
 		//
 		orderListRouterV1.GET("order/user/:user_id", r.orderListController.Find4OrderUserId())
+		orderListRouterV1.GET("order", r.orderListController.Find4All())
 		
 		//주문 접수
 		orderListRouterV1.POST("/order/add", r.orderListController.AddOrderListItem())
