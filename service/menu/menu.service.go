@@ -110,7 +110,10 @@ func (ms *MenuService) UpdateMenuItem(sendDto dto.UpdateMenuRequest) (*dto.HalfR
 	
 	//수정할 데이터 셋
 	var setUpdateSet bson.D
-
+	/*
+	모든 필드에 대해서 기본값이 아님을 체크하는 방법은 안티 패턴인 것 같습니다.
+	메뉴의 필드가 계속해서 늘어난다면, 중복된 코드가 엄청나게 늘어날 것입니다.
+	*/
 	if (sendDto.Name != "") {
 		setUpdateSet = append(setUpdateSet, bson.E{Key: "name", Value: sendDto.Name})
 	}
@@ -165,6 +168,9 @@ func (ms *MenuService) ChangeEntity2HalfReadDto(entity menu_model.MenuEntity) *d
 		subMenu = append(subMenu, item)
 	}
 
+	/*
+	return 부분의 가독성이 매우 떨어지는 것 같습니다. 따로 변수를 선언에 할당하거나, 적절한 줄바꿈이 필요해보입니다.
+	*/
 	return &dto.HalfReadMenuResponse{Id: entity.Id, Name:  entity.Name, MenuStatus: entity.MenuStatus, Price: entity.Price, Event: entity.Event, MenuCategory: entity.MenuCategory, SubMenu:  subMenu, FoodEtcInfo: dto.FoodEtcInfoRequest(entity.FoodEtcInfo), CreateDate: entity.CreateDate, UpdateDate: entity.UpdateDate}
 }
 
