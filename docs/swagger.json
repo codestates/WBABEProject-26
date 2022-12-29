@@ -1,0 +1,1067 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/api/v1/account/user/add": {
+            "post": {
+                "description": "사용자 서비스 가입 API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Account-User-API"
+                ],
+                "summary": "사용자 회원 가입",
+                "parameters": [
+                    {
+                        "description": "일반 사용자 등록용 DTO. dto.CreateUserRequest 객체 참고",
+                        "name": "dto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.NomalReadUserResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/order_list/order": {
+            "get": {
+                "description": "주문 내역 전체를 조회하는 API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OrderList-Order-API"
+                ],
+                "summary": "주문 내역 조회",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.NomalReadOrderListResponse"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/order_list/order/add": {
+            "post": {
+                "description": "주문을 접수하는 API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OrderList-Order-API"
+                ],
+                "summary": "주문 접수",
+                "parameters": [
+                    {
+                        "description": "주문 접수용 DTO. dto.CreateOrderListRequest 객체 참고",
+                        "name": "dto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateOrderListRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.NomalReadOrderListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/order_list/order/menu/update": {
+            "put": {
+                "description": "소비자가 메뉴 추가 등 주문을 갱신하는 API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OrderList-Order-API"
+                ],
+                "summary": "주문 내역 갱신 (소비자 입장)",
+                "parameters": [
+                    {
+                        "description": "주문 내용 갱신용 DTO. dto.UpdateOrderList4MenuRequest 객체 참고",
+                        "name": "dto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateOrderList4MenuRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.NomalReadOrderListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/order_list/order/status/update": {
+            "put": {
+                "description": "업주가 주문 상태 정보 등을 갱신하는 API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OrderList-Order-API"
+                ],
+                "summary": "주문 내역 갱신 (업주 입장)",
+                "parameters": [
+                    {
+                        "description": "주문 상태 갱신용 DTO. dto.UpdateOrderList4StatusRequest 객체 참고",
+                        "name": "dto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateOrderList4StatusRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateOrderList4StatusRequest"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/order_list/order/user/{user_id}": {
+            "get": {
+                "description": "User id를 전달하면 해당 사용자의 주문 내역을 제공하는 API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OrderList-Order-API"
+                ],
+                "summary": "주문 내역 조회 (사용자)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User id =\u003e User entity ID(_id) 값 ",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.NomalReadOrderListResponse"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/rating/add": {
+            "post": {
+                "description": "소비자가 리뷰 및 평점을 등록하는 API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Rating-API"
+                ],
+                "summary": "평점 및 리뷰 등록",
+                "parameters": [
+                    {
+                        "description": "리뷰 평점 등록용 DTO. dto.CreateRatingRequest 객체 참고",
+                        "name": "dto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateRatingRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.FullReadRatingResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/store/menu/add": {
+            "post": {
+                "description": "메뉴를 등록하는 함수",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Menu-API"
+                ],
+                "summary": "메뉴 등록",
+                "parameters": [
+                    {
+                        "description": "메뉴 등록용 DTO. dto.CreateMenuRequest 객체 참고",
+                        "name": "dto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateMenuRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.HalfReadMenuResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/store/menu/delete": {
+            "put": {
+                "description": "메뉴를 수정하는 함수",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Menu-API"
+                ],
+                "summary": "메뉴 수정",
+                "parameters": [
+                    {
+                        "description": "메뉴 수정용 DTO. dto.UpdateMenuRequest 객체 참고",
+                        "name": "dto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateMenuRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateMenuRequest"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/store/menu/delete/{menu_id}": {
+            "delete": {
+                "description": "Menu 아이템을 논리적으로 삭제하는 함수 (물리적 X)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Menu-API"
+                ],
+                "summary": "메뉴 삭제",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Menu id \u003c= 메뉴 고유 id값 ",
+                        "name": "menu_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResponseBody"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/store/menu/get/": {
+            "get": {
+                "description": "메뉴 리스트 조회를 하는 API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Menu-API"
+                ],
+                "summary": "메뉴 리스트 조회",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.HalfReadMenuResponse"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/store/menu/get/{menu_id}": {
+            "get": {
+                "description": "Menu id를 전달하면 메뉴의 상세 정보 및 해당 메뉴의 평점 및 리뷰 정보를 제공하는 API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Menu-API"
+                ],
+                "summary": "메뉴 조회",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Menu id \u003c= 메뉴 고유 id값 ",
+                        "name": "menu_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ReadMenuRatingResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dto.CreateMenuRequest": {
+            "type": "object",
+            "required": [
+                "etcInfo",
+                "event",
+                "menuCategory",
+                "menuStatus",
+                "name",
+                "price",
+                "subMenu"
+            ],
+            "properties": {
+                "etcInfo": {
+                    "$ref": "#/definitions/dto.FoodEtcInfoRequest"
+                },
+                "event": {
+                    "description": "이벤트",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/menu_enums.MenuEventType"
+                    }
+                },
+                "menuCategory": {
+                    "description": "매뉴 카테고리",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/menu_enums.MenuCategoryType"
+                    }
+                },
+                "menuStatus": {
+                    "description": "주문 가능 여부",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/menu_enums.MenuSellStatusType"
+                        }
+                    ]
+                },
+                "name": {
+                    "description": "메뉴 이름",
+                    "type": "string"
+                },
+                "price": {
+                    "description": "가격",
+                    "type": "integer"
+                },
+                "subMenu": {
+                    "description": "서브메뉴",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.SubMenuRequest"
+                    }
+                }
+            }
+        },
+        "dto.CreateOrderListRequest": {
+            "type": "object",
+            "required": [
+                "orderMenuList",
+                "orderUserId"
+            ],
+            "properties": {
+                "orderMenuList": {
+                    "description": "주문 메뉴 리스트",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "orderUserId": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateRatingRequest": {
+            "type": "object",
+            "required": [
+                "menuId",
+                "orderListId",
+                "rating",
+                "reviewMsg",
+                "userId"
+            ],
+            "properties": {
+                "menuId": {
+                    "type": "string"
+                },
+                "orderListId": {
+                    "type": "string"
+                },
+                "rating": {
+                    "$ref": "#/definitions/rating_enum.RatingScore"
+                },
+                "recommendation": {
+                    "description": "binding:\"required\"",
+                    "type": "boolean"
+                },
+                "reviewMsg": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateUserRequest": {
+            "type": "object",
+            "required": [
+                "addr",
+                "name",
+                "phone"
+            ],
+            "properties": {
+                "addr": {
+                    "description": "주소",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "사용자 이름",
+                    "type": "string"
+                },
+                "phone": {
+                    "description": "사용자 폰번호",
+                    "type": "string"
+                }
+            }
+        },
+        "dto.FoodEtcInfoRequest": {
+            "type": "object",
+            "properties": {
+                "originInfo": {
+                    "description": "원산지",
+                    "type": "string"
+                },
+                "spicyInfo": {
+                    "description": "맵기 정보  binding:\"required\"",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/menu_enums.FoodSpicyType"
+                        }
+                    ]
+                }
+            }
+        },
+        "dto.FullReadRatingResponse": {
+            "type": "object",
+            "properties": {
+                "createDate": {
+                    "description": "데이터 생성 시각",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "menuId": {
+                    "description": "메뉴 (_id)",
+                    "type": "string"
+                },
+                "orderListId": {
+                    "description": "주문리스트 (_id)",
+                    "type": "string"
+                },
+                "rating": {
+                    "$ref": "#/definitions/rating_enum.RatingScore"
+                },
+                "recommendation": {
+                    "type": "boolean"
+                },
+                "reviewMsg": {
+                    "type": "string"
+                },
+                "updateDate": {
+                    "description": "데이터 수정 시각",
+                    "type": "string"
+                },
+                "userId": {
+                    "description": "주문자 (_id)",
+                    "type": "string"
+                }
+            }
+        },
+        "dto.HalfReadMenuResponse": {
+            "type": "object",
+            "properties": {
+                "createDate": {
+                    "description": "데이터 생성 시각",
+                    "type": "string"
+                },
+                "event": {
+                    "description": "이벤트",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/menu_enums.MenuEventType"
+                    }
+                },
+                "foodEtcInfo": {
+                    "description": "기타 정보",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/dto.FoodEtcInfoRequest"
+                        }
+                    ]
+                },
+                "id": {
+                    "type": "string"
+                },
+                "menuCategory": {
+                    "description": "매뉴 카테고리",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/menu_enums.MenuCategoryType"
+                    }
+                },
+                "menuStaus": {
+                    "description": "주문 가능 여부",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/menu_enums.MenuSellStatusType"
+                        }
+                    ]
+                },
+                "name": {
+                    "description": "메뉴 이름",
+                    "type": "string"
+                },
+                "price": {
+                    "description": "가격",
+                    "type": "integer"
+                },
+                "subMenu": {
+                    "description": "서브메뉴",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.SubMenuRequest"
+                    }
+                },
+                "updateDate": {
+                    "description": "데이터 수정 시각",
+                    "type": "string"
+                }
+            }
+        },
+        "dto.NomalReadOrderListResponse": {
+            "type": "object",
+            "properties": {
+                "orderId": {
+                    "description": "고유 id",
+                    "type": "string"
+                },
+                "orderMenu": {
+                    "description": "주문 메뉴 리스트",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.NormalReadMenuResponse"
+                    }
+                },
+                "orderStatus": {
+                    "description": "주문 상태",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/order_list_enums.OrderStatus"
+                        }
+                    ]
+                },
+                "orderUserId": {
+                    "description": "주문자",
+                    "type": "string"
+                },
+                "totalPrice": {
+                    "description": "총 가격",
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.NomalReadUserResponse": {
+            "type": "object",
+            "properties": {
+                "addr": {
+                    "description": "주소",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "사용자 이름",
+                    "type": "string"
+                },
+                "phone": {
+                    "description": "사용자 폰번호",
+                    "type": "string"
+                }
+            }
+        },
+        "dto.NormalReadMenuResponse": {
+            "type": "object",
+            "properties": {
+                "event": {
+                    "description": "이벤트",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/menu_enums.MenuEventType"
+                    }
+                },
+                "foodEtcInfo": {
+                    "description": "기타 정보",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/dto.FoodEtcInfoRequest"
+                        }
+                    ]
+                },
+                "id": {
+                    "type": "string"
+                },
+                "menuCategory": {
+                    "description": "매뉴 카테고리",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/menu_enums.MenuCategoryType"
+                    }
+                },
+                "menuStaus": {
+                    "description": "주문 가능 여부",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/menu_enums.MenuSellStatusType"
+                        }
+                    ]
+                },
+                "name": {
+                    "description": "메뉴 이름",
+                    "type": "string"
+                },
+                "price": {
+                    "description": "가격",
+                    "type": "integer"
+                },
+                "subMenu": {
+                    "description": "서브메뉴",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.SubMenuRequest"
+                    }
+                }
+            }
+        },
+        "dto.ReadMenuRatingResponse": {
+            "type": "object",
+            "properties": {
+                "createDate": {
+                    "description": "데이터 생성 시각",
+                    "type": "string"
+                },
+                "event": {
+                    "description": "이벤트",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/menu_enums.MenuEventType"
+                    }
+                },
+                "foodEtcInfo": {
+                    "description": "기타 정보",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/dto.FoodEtcInfoRequest"
+                        }
+                    ]
+                },
+                "id": {
+                    "type": "string"
+                },
+                "menuCategory": {
+                    "description": "매뉴 카테고리",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/menu_enums.MenuCategoryType"
+                    }
+                },
+                "menuStaus": {
+                    "description": "주문 가능 여부",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/menu_enums.MenuSellStatusType"
+                        }
+                    ]
+                },
+                "name": {
+                    "description": "메뉴 이름",
+                    "type": "string"
+                },
+                "price": {
+                    "description": "가격",
+                    "type": "integer"
+                },
+                "rating": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.FullReadRatingResponse"
+                    }
+                },
+                "subMenu": {
+                    "description": "서브메뉴",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.SubMenuRequest"
+                    }
+                },
+                "updateDate": {
+                    "description": "데이터 수정 시각",
+                    "type": "string"
+                }
+            }
+        },
+        "dto.ResponseBody": {
+            "type": "object",
+            "required": [
+                "result"
+            ],
+            "properties": {
+                "data": {},
+                "msg": {},
+                "result": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "dto.SubMenuRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "서브 메뉴 이름",
+                    "type": "string"
+                },
+                "price": {
+                    "description": "가격",
+                    "type": "integer"
+                },
+                "subMenuName": {
+                    "description": "서브 메뉴 타이틀",
+                    "type": "string"
+                }
+            }
+        },
+        "dto.UpdateMenuRequest": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "etcInfo": {
+                    "$ref": "#/definitions/dto.FoodEtcInfoRequest"
+                },
+                "event": {
+                    "description": "이벤트",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/menu_enums.MenuEventType"
+                    }
+                },
+                "id": {
+                    "description": "해당 메뉴 고유 id",
+                    "type": "string"
+                },
+                "menuCategory": {
+                    "description": "매뉴 카테고리",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/menu_enums.MenuCategoryType"
+                    }
+                },
+                "menuStatus": {
+                    "description": "주문 가능 여부",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/menu_enums.MenuSellStatusType"
+                        }
+                    ]
+                },
+                "name": {
+                    "description": "메뉴 이름",
+                    "type": "string"
+                },
+                "price": {
+                    "description": "가격",
+                    "type": "integer"
+                },
+                "subMenu": {
+                    "description": "서브메뉴",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.SubMenuRequest"
+                    }
+                }
+            }
+        },
+        "dto.UpdateOrderList4MenuRequest": {
+            "type": "object",
+            "required": [
+                "orderId",
+                "orderMenu"
+            ],
+            "properties": {
+                "orderId": {
+                    "description": "고유 id",
+                    "type": "string"
+                },
+                "orderMenu": {
+                    "description": "주문 메뉴 리스트",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "dto.UpdateOrderList4StatusRequest": {
+            "type": "object",
+            "required": [
+                "orderId",
+                "orderStatus"
+            ],
+            "properties": {
+                "orderId": {
+                    "description": "고유 id",
+                    "type": "string"
+                },
+                "orderStatus": {
+                    "description": "주문 상태",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/order_list_enums.OrderStatus"
+                        }
+                    ]
+                }
+            }
+        },
+        "menu_enums.FoodSpicyType": {
+            "type": "integer",
+            "enum": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+            ],
+            "x-enum-comments": {
+                "FS_None": "맵기 없음"
+            },
+            "x-enum-varnames": [
+                "FS_None",
+                "FS_Level1",
+                "FS_Level2",
+                "FS_Level3",
+                "FS_Level4",
+                "FS_Level5"
+            ]
+        },
+        "menu_enums.MenuCategoryType": {
+            "type": "integer",
+            "enum": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+            ],
+            "x-enum-comments": {
+                "MC_Bread": "빵",
+                "MC_FastFood": "패스트푸드",
+                "MC_KoreaStyle": "한식",
+                "MC_Pasta": "파스타",
+                "MC_Pizza": "피자",
+                "MC_Sushi": "초밥"
+            },
+            "x-enum-varnames": [
+                "MC_KoreaStyle",
+                "MC_Sushi",
+                "MC_FastFood",
+                "MC_Pizza",
+                "MC_Pasta",
+                "MC_Bread"
+            ]
+        },
+        "menu_enums.MenuEventType": {
+            "type": "integer",
+            "enum": [
+                1,
+                2
+            ],
+            "x-enum-varnames": [
+                "FE_TodayMenu",
+                "FE_Sale4CustomThanks"
+            ]
+        },
+        "menu_enums.MenuSellStatusType": {
+            "type": "integer",
+            "enum": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+            ],
+            "x-enum-comments": {
+                "MSS_Delete": "삭제된 메뉴",
+                "MSS_EventEnd": "한시적 이벤트",
+                "MSS_OnSeal": "판매중",
+                "MSS_Season": "시즌 상품",
+                "MSS_SeasonEnd": "시즌 상품 종료",
+                "MSS_SoldOut": "매진"
+            },
+            "x-enum-varnames": [
+                "MSS_OnSeal",
+                "MSS_SoldOut",
+                "MSS_Season",
+                "MSS_SeasonEnd",
+                "MSS_EventEnd",
+                "MSS_Delete"
+            ]
+        },
+        "order_list_enums.OrderStatus": {
+            "type": "integer",
+            "enum": [
+                1,
+                2,
+                3,
+                4,
+                5
+            ],
+            "x-enum-comments": {
+                "Cooking": "조리중",
+                "DeliveryComplete": "주문완료",
+                "InDelivery": "배달중",
+                "OrderAddChange": "추가 주문으로 변경",
+                "OrderReceipt": "주문 접수"
+            },
+            "x-enum-varnames": [
+                "OrderReceipt",
+                "Cooking",
+                "InDelivery",
+                "DeliveryComplete",
+                "OrderAddChange"
+            ]
+        },
+        "rating_enum.RatingScore": {
+            "type": "integer",
+            "enum": [
+                1,
+                2,
+                3,
+                4,
+                5
+            ],
+            "x-enum-comments": {
+                "Bad": "나쁨",
+                "Excellent": "최고",
+                "Good": "보통",
+                "VeryGood": "좋음",
+                "Worst": "최악"
+            },
+            "x-enum-varnames": [
+                "Worst",
+                "Bad",
+                "Good",
+                "VeryGood",
+                "Excellent"
+            ]
+        }
+    }
+}
