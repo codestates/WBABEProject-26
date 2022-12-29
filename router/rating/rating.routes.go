@@ -19,7 +19,5 @@ func (r *RatingRoute) InitWithRoute(server *gin.Engine) {
 	ratingRouterV1 := server.Group("/api/v1/rating")
 	{
 		ratingRouterV1.POST("/add",r.ratingController.AddRating()) //메뉴 리뷰 등록
-		// orderListRouterV1.PUT("/menu/update", r.menuController.UpdateMenu())
-		// orderListRouterV1.DELETE("/menu/delete/:menu_id", r.menuController.DeleteMenu4Logical())
 	}
 }

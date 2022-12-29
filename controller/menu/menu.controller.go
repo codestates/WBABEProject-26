@@ -36,10 +36,15 @@ func InitWithSelf(menuService menu_service.MenuService) MenuController {
 //	  Get (Read)
 /////////////////////////
 
-//메뉴 조회
-/**
-*
-*/
+
+// @Summary 메뉴 조회
+// @Description Menu id를 전달하면 메뉴의 상세 정보 및 해당 메뉴의 평점 및 리뷰 정보를 제공하는 API
+// @Tags Menu-API
+// @Success 200 {object} dto.ReadMenuRatingResponse
+// @Accept  json
+// @Produce  json
+// @Param menu_id path string true "Menu id <= 메뉴 고유 id값 "
+// @Router /api/v1/store/menu/get/{menu_id} [get]
 func (mc *MenuController) GetMenu4MenuId() gin.HandlerFunc {
 	return func(ginCtx *gin.Context) {
 		menuId := ginCtx.Param("menu_id")
@@ -55,9 +60,14 @@ func (mc *MenuController) GetMenu4MenuId() gin.HandlerFunc {
 	}
 }
 
-/**
-* 메뉴 리스트를 가져오는 함수
-*/
+
+// @Summary 메뉴 리스트 조회
+// @Description 메뉴 리스트 조회를 하는 API
+// @Tags Menu-API
+// @Success 200 {array} dto.HalfReadMenuResponse
+// @Accept  json
+// @Produce  json
+// @Router /api/v1/store/menu/get/ [get]
 func (mc *MenuController) GetMenuList() gin.HandlerFunc {
 	return func(ginCtx *gin.Context) {
 		result, mongoErr := mc.menuService.FindMenuList()
@@ -75,7 +85,15 @@ func (mc *MenuController) GetMenuList() gin.HandlerFunc {
 //	  Add (Create)
 /////////////////////////
 
-//메뉴 등록 함수
+
+// @Summary 메뉴 등록
+// @Description 메뉴를 등록하는 함수
+// @Tags Menu-API
+// @Success 200 {object} dto.HalfReadMenuResponse
+// @Accept  json
+// @Produce  json
+// @Param dto body menu_dto.CreateMenuRequest true "메뉴 등록용 DTO. dto.CreateMenuRequest 객체 참고"
+// @Router /api/v1/store/menu/add [post]
 func (mc *MenuController) AddMenu() gin.HandlerFunc {
 	return func(ginCtx *gin.Context) {
 		//요청 데이터를 확인한다.
@@ -107,7 +125,14 @@ func (mc *MenuController) AddMenu() gin.HandlerFunc {
 //	  Update (Update)
 /////////////////////////
 
-//메뉴 수정
+// @Summary 메뉴 수정
+// @Description 메뉴를 수정하는 함수
+// @Tags Menu-API
+// @Success 200 {object} dto.UpdateMenuRequest
+// @Accept  json
+// @Produce  json
+// @Param dto body menu_dto.UpdateMenuRequest true "메뉴 수정용 DTO. dto.UpdateMenuRequest 객체 참고"
+// @Router /api/v1/store/menu/delete [put]
 func (mc *MenuController) UpdateMenu() gin.HandlerFunc {
 	return func(ginCtx *gin.Context) {
 		//UpdateMenuRequest
@@ -135,7 +160,14 @@ func (mc *MenuController) UpdateMenu() gin.HandlerFunc {
 //	  Delete (Delete)
 /////////////////////////
 
-//Menu 아이템을 논리적으로 삭제하는 함수
+// @Summary 메뉴 삭제
+// @Description Menu 아이템을 논리적으로 삭제하는 함수 (물리적 X)
+// @Tags Menu-API
+// @Success 200 {object} dto.ResponseBody
+// @Accept  json
+// @Produce  json
+// @Param menu_id path string true "Menu id <= 메뉴 고유 id값 "
+// @Router /api/v1/store/menu/delete/{menu_id} [delete]
 func (mc *MenuController) DeleteMenu4Logical() gin.HandlerFunc {
 	return func(ginCtx *gin.Context) {
 		updateDto := dto.UpdateMenuRequest{Id: ginCtx.Param("menu_id"), MenuStatus: menu_enums.MSS_Delete }
@@ -156,7 +188,7 @@ func (mc *MenuController) DeleteMenu4Logical() gin.HandlerFunc {
 //	  Error Handler
 /////////////////////////
 
-/////Error bind
+
 func handleBindError(c *gin.Context, obj interface{}, tag string, err error) {
 	var errs []gin.H
 	switch err.(type) {

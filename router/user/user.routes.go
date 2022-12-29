@@ -18,9 +18,6 @@ func InitWithSelf(userController user_controller.UserController ) UserRoute {
 func (r *UserRoute) InitWithRoute(server *gin.Engine) {
 	userRouterV1 := server.Group("/api/v1/account")
 	{
-		userRouterV1.GET("user/get",)
 		userRouterV1.POST("/user/add",r.userController.AddUser())
-		// orderListRouterV1.PUT("/menu/update", r.menuController.UpdateMenu())
-		// orderListRouterV1.DELETE("/menu/delete/:menu_id", r.menuController.DeleteMenu4Logical())
 	}
 }
