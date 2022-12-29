@@ -132,7 +132,7 @@ func (mc *MenuController) AddMenu() gin.HandlerFunc {
 // @Accept  json
 // @Produce  json
 // @Param dto body menu_dto.UpdateMenuRequest true "메뉴 수정용 DTO. dto.UpdateMenuRequest 객체 참고"
-// @Router /api/v1/store/menu/delete [put]
+// @Router /api/v1/store/menu/update [put]
 func (mc *MenuController) UpdateMenu() gin.HandlerFunc {
 	return func(ginCtx *gin.Context) {
 		//UpdateMenuRequest

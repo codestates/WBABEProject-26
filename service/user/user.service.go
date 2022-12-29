@@ -44,7 +44,7 @@ func (s *UserService) Find4UserPhone(phone string) (*dto.NomalReadUserResponse, 
 /////////////////////////
 
 //사용자 등록
-func (us *UserService) AddMenuItem(addDto dto.CreateUserRequest) (*dto.NomalReadUserResponse, error) {
+func (us *UserService) AddUser(addDto dto.CreateUserRequest) (*dto.NomalReadUserResponse, error) {
 	//Model 조립
 	userEntity := changeCreateUserDto2Entity(addDto)
 	userEntity.CreateDate = time.Now()

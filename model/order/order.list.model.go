@@ -17,7 +17,7 @@ import (
 /////////////////////////
 
 type OrderListEntity struct {
-	ID primitive.ObjectID `bson:"_id,omitempty"`
+	ID primitive.ObjectID `bson:"_id,omitempty"` //MongoDB _id
 	OrderId string `bson:"orderId"` //고유 id
 	OrderUserId string `bson:"orderUserId"` //주문자
 	OrderMenu []string `bson:"orderMenu"` //주문 메뉴 리스트
@@ -52,7 +52,6 @@ func (c *OrderListCollection) AddEntity(entity OrderListEntity) (*mongo.InsertOn
 	result, inErr := c.OrderListCollection.InsertOne(c.Ctx, entity)
 
 	opt := options.Index()
-	opt.SetUnique(true)
 
 	index := mongo.IndexModel{Keys: bson.M{"orderId": 1}, Options: opt}
 	if _, err1 := c.OrderListCollection.Indexes().CreateOne(c.Ctx, index); err1 != nil {

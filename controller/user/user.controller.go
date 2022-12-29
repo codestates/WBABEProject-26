@@ -54,7 +54,7 @@ func (uc *UserController) AddUser() gin.HandlerFunc {
 		}
 
 		//전달된 아이템 등록 처리
-		result, mongoErr := uc.userService.AddMenuItem(addUserReq)
+		result, mongoErr := uc.userService.AddUser(addUserReq)
 
 		//조회에 에러가 난 경우
 		if mongoErr != nil {
