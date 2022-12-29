@@ -32,7 +32,15 @@ func InitWithSelf(ratingService rating_service.RatingService) RatingController {
 //	  Add (Create)
 /////////////////////////
 
-//메뉴 등록 함수
+
+// @Summary 평점 및 리뷰 등록
+// @Description 소비자가 리뷰 및 평점을 등록하는 API
+// @Tags Rating-API
+// @Success 200 {object} dto.FullReadRatingResponse
+// @Accept  json
+// @Produce  json
+// @Param dto body dto.CreateRatingRequest true "리뷰 평점 등록용 DTO. dto.CreateRatingRequest 객체 참고"
+// @Router /api/v1/rating/add [post]
 func (rc *RatingController) AddRating() gin.HandlerFunc {
 	return func(ginCtx *gin.Context) {
 		//요청 데이터를 확인한다.

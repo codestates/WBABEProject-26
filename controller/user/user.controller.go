@@ -31,7 +31,14 @@ func InitWithSelf(userService user_service.UserService) UserController {
 //	  Add (Create)
 /////////////////////////
 
-//메뉴 등록 함수
+// @Summary 사용자 회원 가입
+// @Description 사용자 서비스 가입 API
+// @Tags Account-User-API
+// @Success 200 {object} dto.NomalReadUserResponse
+// @Accept  json
+// @Produce  json
+// @Param dto body dto.CreateUserRequest true "일반 사용자 등록용 DTO. dto.CreateUserRequest 객체 참고"
+// @Router /api/v1/account/user/add [post]
 func (uc *UserController) AddUser() gin.HandlerFunc {
 	return func(ginCtx *gin.Context) {
 		//요청 데이터를 확인한다.

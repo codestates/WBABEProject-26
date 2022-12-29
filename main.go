@@ -3,10 +3,13 @@ package main
 import (
 	"context"
 	"log"
-	"net/http"
 	"strconv"
 
+	"wemade_project/docs"
+
 	"github.com/gin-gonic/gin"
+	swgFiles "github.com/swaggo/files"
+	ginSwg "github.com/swaggo/gin-swagger"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -156,14 +159,12 @@ func startGinServer( ) {
 	// corsConfig.AllowCredentials = true
 	
 	//라우터 등록 부분
-
-	router := server.Group("/api")
-	{
-		router.GET("/healthchecker", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": "Success"})
-	})
-	}
-	
+	// router := server.Group("/api")
+	// {
+	// 	router.GET("/healthchecker", func(ctx *gin.Context) {
+	// 	ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": "Success"})
+	// })
+	// }
 
 	//Menu Route Setup
 	menuRouter.InitWithRoute(server)
@@ -171,6 +172,14 @@ func startGinServer( ) {
 	orderListRouter.InitWithRoute(server)
 	ratingRoute.InitWithRoute(server)
 
+	//Swagger
+	server.GET("/swagger/:any", ginSwg.WrapHandler(swgFiles.Handler))
+	docs.SwaggerInfo.Title = "Go Study Project : Delivery API"
+	docs.SwaggerInfo.Description = "Delivery API Swagger "
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Host = "localhost"
+	docs.SwaggerInfo.InfoInstanceName = "111"
+	
 	
 	log.Fatal(server.Run(":" + strconv.Itoa(config.Server.Port)))
 }
