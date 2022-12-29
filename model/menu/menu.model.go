@@ -29,7 +29,7 @@ type SubMenu struct {
 
 //판매음식 메뉴
 type MenuEntity struct {
-	ID primitive.ObjectID `bson:"_id,omitempty"`
+	ID primitive.ObjectID `bson:"_id,omitempty"` //MongoDB _id
 	Id string `bson:"id"` //고유 id
 	Name string `bson:"name"` //메뉴 이름
 	MenuStatus menu_enums.MenuSellStatusType `bson:"menuStatus"`	//주문 가능 여부	

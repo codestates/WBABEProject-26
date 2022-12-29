@@ -4,6 +4,6 @@
 #/config/config.toml
 
 # go default
-/go.mod
-/go.sum
+#/go.mod
+#/go.sum
 
